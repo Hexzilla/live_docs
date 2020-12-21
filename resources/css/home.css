@@ -1,0 +1,17 @@
+header{min-height:450px;}
+body{background:#dfd786}
+.jumbotron {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+
+	text-align:center;
+  background-color: #dfd786;
+}
+.masthead{
+	
+	float:left;width:100%;
+}
+.masthead_ul {
+    padding: 13px;
+}
