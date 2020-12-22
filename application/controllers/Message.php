@@ -15,6 +15,7 @@ class Message extends CI_Controller{
         $config['max_width'] = 3024;
         $config['max_height'] = 3024;
         $config['file_ext_tolower'] = TRUE;
+        $config['encrypt_name'] = TRUE;
 
         $this->load->library('upload', $config);
     } 
@@ -48,71 +49,59 @@ class Message extends CI_Controller{
         $data['emailgroups'] = $this->Emails_model->getRows('emailgroups');
         $this->load->library('form_validation');
 
-
         $this->form_validation->set_rules('subject', 'Subject', 'required');
 
-        
-        
-    
-    
-    
-    
-        
-        
         if ($this->form_validation->run()) {
             
-            $attach='';
+            $attach_file_names = array();
+            $uploaded_file_names = array();
         
-       
-        if($_FILES['attachments']['name']){ 
-            $attach=$_FILES['attachments']['name'];
-            if ( !$this->upload->do_upload('attachments') ) {
-                $this->data['error'] = $this->upload->display_errors();
+            if( $_FILES['attachments']['name'] ){ 
+                if ( !$this->upload->do_upload('attachments') ) {
+                    $this->data['error'] = $this->upload->display_errors();
+                }
+                else{
+                    $upload_data  = $this->upload->data();
+                    $attach_file_names[] = $upload_data['orig_name'];
+                    $uploaded_file_names[] = $upload_data['file_name'];
+                }
             }
-            else{
-                $upload_data  = $this->upload->data();
-                $attachments=$upload_data['file_name'];
-                $attach=$attachments;
+            
+            if( $_FILES['attachments2']['name'] ){ 
+                if ( !$this->upload->do_upload('attachments2') ) {
+                    $this->data['error'] = $this->upload->display_errors();
+                }
+                else{
+                    $upload_data  = $this->upload->data();
+                    $attach_file_names[] = $upload_data['orig_name'];
+                    $uploaded_file_names[] = $upload_data['file_name'];
+                }
             }
-        }
         
+            if( $_FILES['attachments3']['name'] ){ 
+                if ( !$this->upload->do_upload('attachments3') ) {
+                    $this->data['error'] = $this->upload->display_errors();
+                }
+                else {
+                    $upload_data  = $this->upload->data();
+                    $attach_file_names[] = $upload_data['orig_name'];
+                    $uploaded_file_names[] = $upload_data['file_name'];
+                }
+            }
 
-        
-        if($_FILES['attachments2']['name']){ 
-            if ( !$this->upload->do_upload('attachments2') ) {
-                $this->data['error'] = $this->upload->display_errors();
-            }
-            else{
-                $upload_data  = $this->upload->data();
-                $attachments2=$upload_data['file_name'];
-                $attach=$attach.','.$attachments2;
-            }
-        }
-    
-    
-   
-        
-        if($_FILES['attachments3']['name']){ 
-            if ( !$this->upload->do_upload('attachments3') ) {
-                $this->data['error'] = $this->upload->display_errors();
-            }
-            else {
-                $upload_data  = $this->upload->data();
-                $attachments3=$upload_data['file_name'];
-                $attach=$attach.','.$attachments3;
-            }
-        }
-            
-            
+            $attach_file_names = implode(',', $attach_file_names);
+            $uploaded_file_names = implode(',', $uploaded_file_names);
+
             $params = array(
                 'send_date_time' => $this->input->post('send_date_time'),
                 'content' => addslashes($this->input->post('content')),                
                 'subject' => $this->input->post('subject'),
             );
-            if($this->input->post('toemail')){ $params['toemail']=$this->input->post('toemail');}else{$params['toemail']='';}
-            if($this->input->post('mailcc')) $params['mailcc']=$this->input->post('mailcc');
-            if($this->input->post('group_ids'))  $params['mailto'] = implode(',', $this->input->post('group_ids'));
-            if($attach) $params['attachments']=$attach;
+            if( $this->input->post('toemail') ){ $params['toemail']=$this->input->post('toemail');}else{$params['toemail']='';}
+            if( $this->input->post('mailcc')) $params['mailcc']=$this->input->post('mailcc');
+            if( $this->input->post('group_ids'))  $params['mailto'] = implode(',', $this->input->post('group_ids'));
+            if( $attach_file_names ) $params['attachments'] = $attach_file_names;
+            if( !empty($uploaded_file_names) ) $params['uploaded_file_names'] = $uploaded_file_names;
             $letter_id = $this->Emails_model->insert('message', $params);
             
             
@@ -138,7 +127,7 @@ class Message extends CI_Controller{
 
       
         
-        if(isset($id))
+        if( isset($id))
         {
             $this->load->library('form_validation');
 
@@ -151,9 +140,9 @@ class Message extends CI_Controller{
                 'subject' => $this->input->post('subject')
             );
 
-            if($this->input->post('mailcc')) $params['mailcc']=$this->input->post('mailcc');
-            if($this->input->post('toemail')){ $params['toemail']=$this->input->post('toemail');}else{$params['toemail']='';}
-            if($this->input->post('group_ids')) { $params['mailto'] = implode(',', $this->input->post('group_ids'));}else{$params['mailto']='';}
+            if( $this->input->post('mailcc')) $params['mailcc']=$this->input->post('mailcc');
+            if( $this->input->post('toemail') ){ $params['toemail']=$this->input->post('toemail');}else{$params['toemail']='';}
+            if( $this->input->post('group_ids')) { $params['mailto'] = implode(',', $this->input->post('group_ids'));}else{$params['mailto']='';}
             $letter_id = $this->Emails_model->update('message', $params, array('id'=>$id));
            
 
@@ -177,7 +166,7 @@ class Message extends CI_Controller{
         
 
         // check if the letter exists before trying to delete it
-        if(isset($id))
+        if( isset($id))
         {
             $this->Emails_model->delete('message',$id);
             redirect('message/index');

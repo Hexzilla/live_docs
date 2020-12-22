@@ -41,10 +41,10 @@
                                     <h3>المرفقات الحالية</h3>
                                     <?php 
 									if(!empty($emailgroups)){
-                                    $attachments=  explode(',',  $message[0]['attachments']);
-                                    foreach ($attachments as $attch){
-                                    ?>
-                                    <a href="<?php echo site_url()."assets/upload/$attch"?>" target="_NEW"><?php echo $attch;?></a><br/>
+                                    $attachments1=  explode(',',  $message[0]['attachments']);
+                                    $attachments2=  explode(',',  $message[0]['uploaded_file_names']);
+                                    for ($i = 0; $i < count($attachments1); $i++) { ?>
+                                    <a href="<?php echo site_url()."assets/upload/$attachments2[$i]"?>" target="_NEW"><?php echo $attachments1[$i];?></a><br/>
                                     <?php }}?>
                                 </div>
 				</div>

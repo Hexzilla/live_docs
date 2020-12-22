@@ -76,21 +76,21 @@ class Sendit extends CI_Controller {
         
 
         
-        $attch=  explode(',',$messagec[0]['attachments']);
-
+        $attch = explode(',',$messagec[0]['attachments']);
+        $attch_uploaded_files = explode(',',$messagec[0]['uploaded_file_names']);
         
-        if($attch[0]){ 
-            $attch1=FCPATH . 'assets/upload/'.$attch[0];
-            $this->email->attach($attch1);
+        if($attch[0] && $attch_uploaded_files[0]){ 
+            $attch1=FCPATH . 'assets/upload/'.$attch_uploaded_files[0];
+            $this->email->attach($attch1, '', $attch[0]);
         
         }
         if($attch[1]){
-            $attch2=FCPATH . 'assets/upload/'.$attch[1];
-            $this->email->attach($attch2);
+            $attch2=FCPATH . 'assets/upload/'.$attch_uploaded_files[1];
+            $this->email->attach($attch2, '', $attch[1]);
         }
         if($attch[2]){
-            $attch3=FCPATH . 'assets/upload/'.$attch[2];
-            $this->email->attach($attch3);
+            $attch3=FCPATH . 'assets/upload/'.$attch_uploaded_files[2];
+            $this->email->attach($attch3, '', $attch[2]);
         }
         
         foreach ($emails as $em) {
@@ -134,9 +134,9 @@ class Sendit extends CI_Controller {
             $this->email->message($message);
 
             if ($this->email->send()) {
-//                echo 'Email Successfully send to ' . $messagec[0]['toemail'] . '<br/>';
+                echo 'Email Successfully send to ' . $messagec[0]['toemail'] . '<br/>';
             } else {
-                print_r($this->email);
+                echo 'Failed to send mail to ' . $messagec[0]['toemail'] . '<br/>';
             }
         }
 
