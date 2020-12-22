@@ -53,22 +53,29 @@ class Employee extends CI_Controller{
 		
 		
 		if($this->form_validation->run())     
-        {
-            $comapnyid=$this->input->post('companyid');
-            //$filess = $this->db->get_where('company', array('Name' =>$comapnyid))->row_array();
-            //if(!empty($filess)){ 
-                $params = array(
-                    'Remarks' => $this->input->post('Remarks'),
-                    'Ctype' => $this->input->post('Ctype'),
-                    'emp_name' => $this->input->post('emp_name'),
-                    'companyid' => $comapnyid,//$filess['companyid'],
-                    'email' => $this->input->post('email'),
-                    'mobile' => $this->input->post('mobile'),
-                    'Nationality' => $this->input->post('Nationality'),
-                    'position' => $this->input->post('position'),
-                );
-                $employee_id = $this->Employee_model->add_employee($params);
-            //}
+        {  
+
+
+				$comapnyid=$this->input->post('companyid');
+				$filess = $this->db->get_where('company', array('Name' =>$comapnyid))->row_array();
+
+				if(!empty($filess)){ 
+
+
+						$params = array(
+							'Remarks' => $this->input->post('Remarks'),
+							'Ctype' => $this->input->post('Ctype'),
+							'emp_name' => $this->input->post('emp_name'),
+							'companyid' => $filess['companyid'],
+							'email' => $this->input->post('email'),
+							'mobile' => $this->input->post('mobile'),
+							'Nationality' => $this->input->post('Nationality'),
+							'position' => $this->input->post('position'),
+						);
+						
+						$employee_id = $this->Employee_model->add_employee($params);
+			
+				}
             redirect('employee/index');
         }
         else

@@ -110,43 +110,55 @@ class Company extends CI_Controller{
 		$this->form_validation->set_rules('email','Email','valid_emails');
 		$this->form_validation->set_rules('Name','Name','required|min_length[2]|max_length[60]|is_unique[company.Name]');
 		$this->form_validation->set_rules('CompType','CompType','required');
-		$this->form_validation->set_rules('Customer_id','Customer Id','required');
-         $data=array();
+		$this->form_validation->set_rules('Customer_id[]','Customer Id','required');
+				
+		$data = array();
 		$data['err_customer_id']="";	
+		$data['err_company_id']="";	
 	
 		
-		$Customer_id=$this->input->post('Customer_id');
+		$Customer_id = $this->input->post('Customer_id[]');
 		
 		if((empty($Customer_id))&&($_POST)){
-			
 			$data['err_customer_id']="There is no customers defined, please add customer first";
 		}
 		
-		if($this->form_validation->run())     
+		$validated = 1;
+		$has_company = $this->input->post('has_company');
+		$Company_id_list = $this->input->post('Company_id[]');
+		if($has_company == 'on' && empty($Company_id_list) && ($_POST)) {
+			$validated = 0;
+			$data['err_company_id']="There is no company defined, please add company first";
+		}
+		if($validated == 1 && $this->form_validation->run())     
         {   
 			$params = array(
 				'Remarks' => $this->input->post('Remarks'),
 				'CompType' => $this->input->post('CompType'),
-				'Customer_id' => $Customer_id,
+						//'Customer_id' => $files['customer_id'],
 				'Managerid' => $this->input->post('Managerid'),
 				'Name' => $this->input->post('Name'),
 				'companyNo' => $this->input->post('companyNo'),
 				'CompReg' => $this->input->post('CompReg'),
 				'email' => $this->input->post('email'),
 			);
+				$company_id = $this->Company_model->add_company($params);
 				
-			$company_id = $this->Company_model->add_company($params);
-			
-			/*//  $insertId = $this->db->insert_id();
-			if(!empty($company_id)){
-				$count=count($Customer_id);
-				for ($x = 0; $x < $count; $x++) {
-					$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$company_id );
-					$this->db->insert('get_company', $params2); 
-				} 
-			}*/
-			$params2 = array('customer_id'=>$Customer_id,'companyid'=>$company_id );
-			$this->db->insert('get_company', $params2); 
+					
+				//  $insertId = $this->db->insert_id();
+				if (!empty($company_id)){
+					 $count = count($Customer_id);
+					for ($x = 0; $x < $count; $x++) {
+						$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$company_id );
+						$this->db->insert('get_company', $params2); 
+					} 
+
+					$count = count($Company_id_list);
+					for ($x = 0; $x < $count; $x++) {
+						$params2 = array('company_id' => $company_id, 'main_company_id' => $Company_id_list[$x] );
+						$this->db->insert('company_links', $params2); 
+					} 
+				}
 		
             redirect('company/index');
         }
@@ -186,6 +198,14 @@ class Company extends CI_Controller{
 		
 		$data['custome']=$custome;
 
+
+		//Get main company list
+		$this->db->select('L.company_id, L.main_company_id, G.Name as main_company_name');
+		$this->db->from('company_links as L');
+		$this->db->join('company AS G','G.companyid = L.main_company_id');
+		$this->db->where('L.company_id', $companyid);
+		$company_list = $this->db->get()->result_array();
+		$data['company_list'] = $company_list;
 /* 
 		echo"<pre>";
 		print_r($custome);
@@ -201,6 +221,9 @@ class Company extends CI_Controller{
 			
 			$data['err_customer_id']="There is no customers defined, please add customer first";
 		}			
+
+
+
   
 					        
         if(!empty($data['company']['companyid']))
@@ -211,45 +234,55 @@ class Company extends CI_Controller{
 			$this->form_validation->set_rules('Name','Name','required');
 			$this->form_validation->set_rules('CompType','CompType','required');
 			//$this->form_validation->set_rules('Customer_id[]','Customer Id','required');
+
+
+			//Has_main_company
+			$validated = 1;
+			$has_company = $this->input->post('has_company');
+			$Company_id_list = $this->input->post('Company_id[]');
+			if($has_company == 'on' && empty($Company_id_list) && ($_POST)) {
+				$validated = 0;
+				$data['err_company_id'] = "There is no company defined, please add company first";
+			}
+
 		
-			if($this->form_validation->run())     
+			if( $validated == 1 && $this->form_validation->run())     
             {   
-			
+				$params = array(
+					'Remarks' => $this->input->post('Remarks'),
+					'CompType' => $this->input->post('CompType'),
+					'Managerid' => $this->input->post('Managerid'),
+					'Name' => $this->input->post('Name'),
+					'companyNo' => $this->input->post('companyNo'),
+					'CompReg' => $this->input->post('CompReg'),
+					'email' => $this->input->post('email'),
+				);
 
-			
-			
-						$params = array(
-							'Remarks' => $this->input->post('Remarks'),
-							'CompType' => $this->input->post('CompType'),
-							'Managerid' => $this->input->post('Managerid'),
-							'Name' => $this->input->post('Name'),
-							'companyNo' => $this->input->post('companyNo'),
-							'CompReg' => $this->input->post('CompReg'),
-							'email' => $this->input->post('email'),
-						);
+				$this->Company_model->update_company($companyid,$params);  
 
-						$this->Company_model->update_company($companyid,$params);  
-
-
-
-				  if(!empty($companyid)){
-					  $count=count($Customer_id);
-					
-				
+				if(!empty($companyid)){
+					$count=count($Customer_id);
 											  
-						 for ($x = 0; $x < $count; $x++) {
-							 $new_arrs=$this->db->get_where('get_company', array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid ))->row_array();
-							 if(empty($new_arrs)){
-								 $params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid );
-										$this->db->insert('get_company', $params2);
-								 
-							 }
-										 
-						} 
-					
-				  }
+					for ($x = 0; $x < $count; $x++) {
+							$new_arrs=$this->db->get_where('get_company', array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid ))->row_array();
+							if(empty($new_arrs)){
+								$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid );
+									$this->db->insert('get_company', $params2);
+							}
+					} 
 
-
+					//company_links
+					$this->db->where('company_id', $companyid);
+					$this->db->delete('company_links');	
+					$company_links_array = array();
+					foreach ($Company_id_list as $comp) {
+						$company_links_array[] = array(
+							'company_id' => $companyid,
+							'main_company_id' => $comp
+						);
+					}
+					$this->db->insert_batch('company_links', $company_links_array);
+				}
 
               $data['save_done']="Save done successfully";
 
@@ -335,48 +368,67 @@ exit(); */
     function get_customer()
     {
 	
-                $q = strtolower($_POST["keyword"]);
-				
-				$role_id = $_POST["role_id"];
-				$myrole="";
-				if(!empty($role_id)){
-					$explode=explode(",",$role_id);
-					if(!empty($explode)){
-						foreach ($explode as $key => $value) {
-							$myrole=$myrole.'customer_id !='.$value.' and ';
-						}
-					}
-					
+		$q = strtolower($_POST["keyword"]);
+		
+		$role_id = $_POST["role_id"];
+		$myrole="";
+		if(!empty($role_id)){
+			$explode=explode(",",$role_id);
+			if(!empty($explode)){
+				foreach ($explode as $key => $value) {
+					$myrole=$myrole.'customer_id !='.$value.' and ';
 				}
+			}
+			
+		}
 				
-				
-				
-				if (!$q) return;
+		if (!$q) return;
 
-			$sql = "select * from customers where ".$myrole." 1=1 and Customer_name LIKE '%$q%' ORDER BY Customer_name LIMIT 0,6";
-				$query = $this->db->query($sql)->result_array();
-				if(!empty($query)){
-				
+		$sql = "select * from customers where ".$myrole." 1=1 and Customer_name LIKE '%$q%' ORDER BY Customer_name LIMIT 0,6";
+		$query = $this->db->query($sql)->result_array();
+		if (!empty($query)) {
 ?>
 <ul id="country-list">
-<?php
-foreach($query as $country) {
-?>
+<?php foreach($query as $country) { ?>
 <li onClick="selectCountry('<?php echo $country["customer_id"]; ?>,<?php echo $country["Customer_name"]; ?>');"><?php echo $country["Customer_name"]; ?></li>
 <?php } ?>
 </ul>
-						
-						
-					
-						
-						
-						
-		<?php				
-						
-				
+<?php
+		}
+    }
+	
+	
+    function get_company()
+    {
+		$q = strtolower($_POST["keyword"]);
+		
+		$role_id = $_POST["role_id"];
+		$myrole = "";
+		
+		if (!empty($role_id)) {
+			$explode = explode(",", $role_id);
+			if (!empty($explode)) {
+				foreach ($explode as $key => $value) {
+					$myrole = $myrole . 'companyid !=' . $value . ' and ';
 				}
+			}
+		}
 				
-				
+		if (!$q) {
+			return;
+		}
+
+		$sql = "select * from company where ".$myrole." 1=1 and Name LIKE '%$q%' ORDER BY Name LIMIT 0,6";
+		$query = $this->db->query($sql)->result_array();
+		if (!empty($query)) {
+			?>
+			<ul id="country-list">
+			<?php foreach($query as $country) { ?>
+			<li onClick="selectCompany('<?php echo $country["companyid"]; ?>,<?php echo $country["Name"]; ?>');"><?php echo $country["Name"]; ?></li>
+			<?php } ?>
+			</ul>
+			<?php
+		}
     }
 	
 	

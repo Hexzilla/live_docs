@@ -52,7 +52,7 @@
 					<div class="col-md-6">						
 						<label for="Customer_id" class="control-label">اسم العميل</label><span class="text-danger">*</span>						
 						<div class="form-group">
-				            <input type="text" name="Customer_id" value="<?php echo $this->input->post('Customer_id'); ?>" class="form-control" id="search-box" >
+				            <input type="text" name="Customer_ids" value="<?php echo $this->input->post('Customer_id'); ?>" class="form-control" id="search-box" >
 							<div id="suggesstion-box"></div>
 							<div id="list_boxs">
 							<?php if(!empty($custome)){
@@ -68,6 +68,36 @@
 							<span class="text-danger"><?php echo $err_customer_id;?></span>
 						</div>
 					</div>
+					<!--HAS MAIN COMPANY BEGIN-------------------------------------------------------------------------->
+					<div class="col-md-6">						
+						<?php 
+							$comp_checked_state = empty($company_list) ? "" : "checked"; 
+							$comp_disabled = empty($company_list) ? "disabled" : "";
+						?>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="has_company" name="has_company" <?php echo($comp_checked_state);?> />
+							<label for="has_company" class="control-label" style="margin-right:8px;">Has a compnay</label>
+						</div>
+						<div id="div_has_main_compnay" class="form-group <?php echo $comp_disabled; ?>">
+				            <input type="text" name="Company_ids" value="<?php echo $this->input->post('Company_id'); ?>" class="form-control" id="search-company" >
+							<div id="suggesstion-company"></div>
+							<div id="list_company">
+								<?php if(!empty($company_list)){ ?>							
+									<?php foreach($company_list as $comp){ $mcompid = $comp['main_company_id']; ?>
+										<div class="my_delete_my" id="com_delete<?php echo $mcompid;?>">
+											<input type="hidden" name="Company_id[]" value="<?php echo $mcompid;?>" class="companyHidden">
+											<span class="class_lists"><?php echo $comp['main_company_name'];?></span>
+											<label data-id="<?php echo $mcompid;?>" class="com_delete">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</label>
+										</div>
+									<?php } ?>
+								<?php } ?>
+							</div>	
+							<span class="text-danger"><?php echo $err_company_id;?></span>
+						</div>
+					</div>
+					<!--HAS MAIN COMPANY END-------------------------------------------------------------------------->
 					<div class="col-md-6">
 						
 						<label for="Managerid" class="control-label">اسم المدير</label>

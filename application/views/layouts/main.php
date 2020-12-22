@@ -77,6 +77,10 @@
             .hide{
                 display: none !important;
             }
+            .disabled {
+                pointer-events: none;
+                color: #ccc;
+            }
         </style>
     </head>
     
@@ -494,25 +498,42 @@
  <script>
 $(document).ready(function(){
 	$("#search-box").keyup(function(){
-roles = $('input.rolesHidden').map(function() {
-    return [[this.value]];
-}).get();
+        roles = $('input.rolesHidden').map(function() {
+            return [[this.value]];
+        }).get();
 
-
-
-		
 		$.ajax({
-		type: "POST",
-		url: "<?php echo base_url();?>company/get_customer",
-		data:'keyword='+$(this).val()+'&role_id='+roles,
-		beforeSend: function(){
-			$("#search-box").css("background","#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
-		},
-		success: function(data){
-			$("#suggesstion-box").show();
-			$("#suggesstion-box").html(data);
-			$("#search-box").css("background","#FFF");
-		}
+    		type: "POST",
+	    	url: "<?php echo base_url();?>company/get_customer",
+		    data:'keyword='+$(this).val()+'&role_id='+roles,
+		    beforeSend: function(){
+			    $("#search-box").css("background","#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
+		    },
+		    success: function(data){
+			    $("#suggesstion-box").show();
+			    $("#suggesstion-box").html(data);
+			    $("#search-box").css("background","#FFF");
+		    }
+		});
+	});
+
+    $("#search-company").keyup(function(){
+        roles = $('input.companyHidden').map(function() {
+            return [[this.value]];
+        }).get();
+
+		$.ajax({
+    		type: "POST",
+	    	url: "<?php echo base_url();?>company/get_company",
+		    data: 'keyword=' + $(this).val() + '&role_id='+ roles,
+		    beforeSend: function(){
+			    $("#search-company").css("background", "#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
+		    },
+		    success: function(data){
+			    $("#suggesstion-company").show();
+			    $("#suggesstion-company").html(data);
+			    $("#search-company").css("background", "#FFF");
+		    }
 		});
 	});
 });
@@ -527,6 +548,16 @@ function selectCountry(val) {
 	
 $("#search-box").val('');
 $("#suggesstion-box").hide();
+}
+
+function selectCompany(val) {
+	
+	res = val.split(",");
+	
+	$("#list_company").append('<div class="my_delete_my" id="com_delete'+res[0]+'"><input class="companyHidden" type="hidden" name="Company_id[]" value="'+res[0]+'"><span class="class_lists">'+res[1]+'</span><label data-id="'+res[0]+'" class="com_delete"><i class="fa fa-trash" aria-hidden="true"></i></label></div>');
+	
+$("#search-company").val('');
+$("#suggesstion-company").hide();
 }
 </script>
 
@@ -558,7 +589,14 @@ $().ready(function() {
 	});	
 	
 	
-	
+	$("#has_company").change(function(e) {
+        if (this.checked) {
+            $("#div_has_main_compnay").removeClass("disabled");
+        }
+        else {
+            $("#div_has_main_compnay").addClass("disabled");
+        }
+    });
 	
 });
 </script>
@@ -578,6 +616,13 @@ jQuery(document).ready(function ($) {
 	 my_id=$(this).data("id");
 
 	  $("#my_delete"+my_id).remove();
+
+	});	
+
+    $( "body" ).delegate( ".com_delete", "click", function() {
+	 my_id=$(this).data("id");
+
+	  $("#com_delete"+my_id).remove();
 
 	});	
 });		

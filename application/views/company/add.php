@@ -39,10 +39,22 @@
 					<div class="col-md-6">
 						<label for="Customer_id" class="control-label">العميل</label><span class="text-danger">*</span>
 						<div class="form-group">
-				            <input type="text" name="Customer_id" value="<?php echo $this->input->post('Customer_id'); ?>" class="form-control" id="search-box" >
+				            <input type="text" name="Customer_ids" value="<?php echo $this->input->post('Customer_id'); ?>" class="form-control" id="search-box" >
 							<div id="suggesstion-box"></div>
 							<div id="list_boxs"></div>
 							<span class="text-danger"><?php echo $err_customer_id;?></span>
+						</div>
+					</div>
+					<div id="div_has_main_compnay" class="col-md-6">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="has_company" name="has_company" />
+							<label for="has_company" class="control-label" style="margin-right:8px;">Has a compnay</label>
+						</div>
+						<div class="form-group">
+				            <input type="text" name="Company_ids" value="<?php echo $this->input->post('Company_id'); ?>" class="form-control disabled" id="search-company" >
+							<div id="suggesstion-company"></div>
+							<div id="list_company"></div>
+							<span class="text-danger"><?php echo $err_company_id;?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
