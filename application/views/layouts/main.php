@@ -517,7 +517,7 @@ $(document).ready(function(){
 		});
 	});
 
-    $("#search-company").keyup(function(){
+    $("#main_company_name").keyup(function(){
         roles = $('input.companyHidden').map(function() {
             return [[this.value]];
         }).get();
@@ -527,12 +527,12 @@ $(document).ready(function(){
 	    	url: "<?php echo base_url();?>company/get_company",
 		    data: 'keyword=' + $(this).val() + '&role_id='+ roles,
 		    beforeSend: function(){
-			    $("#search-company").css("background", "#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
+			    $("#main_company_name").css("background", "#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
 		    },
 		    success: function(data){
 			    $("#suggesstion-company").show();
 			    $("#suggesstion-company").html(data);
-			    $("#search-company").css("background", "#FFF");
+			    $("#main_company_name").css("background", "#FFF");
 		    }
 		});
 	});
@@ -551,13 +551,10 @@ $("#suggesstion-box").hide();
 }
 
 function selectCompany(val) {
-	
 	res = val.split(",");
-	
-	$("#list_company").append('<div class="my_delete_my" id="com_delete'+res[0]+'"><input class="companyHidden" type="hidden" name="Company_id[]" value="'+res[0]+'"><span class="class_lists">'+res[1]+'</span><label data-id="'+res[0]+'" class="com_delete"><i class="fa fa-trash" aria-hidden="true"></i></label></div>');
-	
-$("#search-company").val('');
-$("#suggesstion-company").hide();
+    $("#main_company_name").val(res[1]);
+    $("#main_company_id").val(res[0]);
+    $("#suggesstion-company").hide();
 }
 </script>
 

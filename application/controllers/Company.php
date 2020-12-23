@@ -114,23 +114,24 @@ class Company extends CI_Controller{
 				
 		$data = array();
 		$data['err_customer_id']="";	
-		$data['err_company_id']="";	
+		$data['err_main_company_id']="";	
 	
 		
 		$Customer_id = $this->input->post('Customer_id[]');
 		
-		if((empty($Customer_id))&&($_POST)){
+		if ((empty($Customer_id))&&($_POST)){
 			$data['err_customer_id']="There is no customers defined, please add customer first";
 		}
 		
+		//Has_main_company
 		$validated = 1;
 		$has_company = $this->input->post('has_company');
-		$Company_id_list = $this->input->post('Company_id[]');
-		if($has_company == 'on' && empty($Company_id_list) && ($_POST)) {
+		$main_company_id = $this->input->post('main_company_id');
+		if ($has_company == 'on' && empty($main_company_id) && ($_POST)) {
 			$validated = 0;
-			$data['err_company_id']="There is no company defined, please add company first";
+			$data['err_main_company_id'] = "There is no company defined, please add company first";
 		}
-		if($validated == 1 && $this->form_validation->run())     
+		if ($validated == 1 && $this->form_validation->run())     
         {   
 			$params = array(
 				'Remarks' => $this->input->post('Remarks'),
@@ -141,6 +142,7 @@ class Company extends CI_Controller{
 				'companyNo' => $this->input->post('companyNo'),
 				'CompReg' => $this->input->post('CompReg'),
 				'email' => $this->input->post('email'),
+				'main_company_id' => $main_company_id,
 			);
 				$company_id = $this->Company_model->add_company($params);
 				
@@ -151,12 +153,6 @@ class Company extends CI_Controller{
 					for ($x = 0; $x < $count; $x++) {
 						$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$company_id );
 						$this->db->insert('get_company', $params2); 
-					} 
-
-					$count = count($Company_id_list);
-					for ($x = 0; $x < $count; $x++) {
-						$params2 = array('company_id' => $company_id, 'main_company_id' => $Company_id_list[$x] );
-						$this->db->insert('company_links', $params2); 
 					} 
 				}
 		
@@ -198,14 +194,7 @@ class Company extends CI_Controller{
 		
 		$data['custome']=$custome;
 
-
-		//Get main company list
-		$this->db->select('L.company_id, L.main_company_id, G.Name as main_company_name');
-		$this->db->from('company_links as L');
-		$this->db->join('company AS G','G.companyid = L.main_company_id');
-		$this->db->where('L.company_id', $companyid);
-		$company_list = $this->db->get()->result_array();
-		$data['company_list'] = $company_list;
+		
 /* 
 		echo"<pre>";
 		print_r($custome);
@@ -239,10 +228,10 @@ class Company extends CI_Controller{
 			//Has_main_company
 			$validated = 1;
 			$has_company = $this->input->post('has_company');
-			$Company_id_list = $this->input->post('Company_id[]');
-			if($has_company == 'on' && empty($Company_id_list) && ($_POST)) {
+			$main_company_id = $this->input->post('main_company_id');
+			if ($has_company == 'on' && empty($main_company_id) && ($_POST)) {
 				$validated = 0;
-				$data['err_company_id'] = "There is no company defined, please add company first";
+				$data['err_main_company_id'] = "There is no company defined, please add company first";
 			}
 
 		
@@ -256,6 +245,7 @@ class Company extends CI_Controller{
 					'companyNo' => $this->input->post('companyNo'),
 					'CompReg' => $this->input->post('CompReg'),
 					'email' => $this->input->post('email'),
+					'main_company_id' => $main_company_id,
 				);
 
 				$this->Company_model->update_company($companyid,$params);  
@@ -270,18 +260,6 @@ class Company extends CI_Controller{
 									$this->db->insert('get_company', $params2);
 							}
 					} 
-
-					//company_links
-					$this->db->where('company_id', $companyid);
-					$this->db->delete('company_links');	
-					$company_links_array = array();
-					foreach ($Company_id_list as $comp) {
-						$company_links_array[] = array(
-							'company_id' => $companyid,
-							'main_company_id' => $comp
-						);
-					}
-					$this->db->insert_batch('company_links', $company_links_array);
 				}
 
               $data['save_done']="Save done successfully";
@@ -314,6 +292,21 @@ exit(); */
             }
             else
             {
+				//Get main company list
+				$cur_company = $data['company'];
+				if (!empty($cur_company) && $cur_company['main_company_id']) {
+					$main_company_id = $cur_company['main_company_id'];
+					$data['main_company_id'] = $main_company_id;
+					
+					$this->db->select('Name');
+					$this->db->from('company');
+					$this->db->where('companyid', $main_company_id);
+					$main_company_name = $this->db->get()->row();
+					if (!empty($main_company_name)) {
+						$data['main_company_name'] = $main_company_name->Name;
+					}
+				}
+				
 				$this->load->model('Comptype_model');
 				$data['all_comptypes'] = $this->Comptype_model->get_all_comptypes();
 

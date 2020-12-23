@@ -20,7 +20,7 @@ class Company_model extends CI_Model
 		 
 		 
 		 
-		$this->db->select('C.companyid,C.Name,C.companyNo,C.CompType,C.CompReg,C.email,C.Managerid,C.Remarks');
+		$this->db->select('*');
 		$this->db->from('company AS C');		
 		$this->db->where('companyid',$companyid);
 		$query=$this->db->get();
