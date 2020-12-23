@@ -229,9 +229,14 @@ class Company extends CI_Controller{
 			$validated = 1;
 			$has_company = $this->input->post('has_company');
 			$main_company_id = $this->input->post('main_company_id');
-			if ($has_company == 'on' && empty($main_company_id) && ($_POST)) {
-				$validated = 0;
-				$data['err_main_company_id'] = "There is no company defined, please add company first";
+			if ($has_company == 'on') {
+				if (empty($main_company_id) && ($_POST)) {
+					$validated = 0;
+					$data['err_main_company_id'] = "There is no company defined, please add company first";
+				}
+			}
+			else {
+				$main_company_id = NULL;
 			}
 
 		
