@@ -34,6 +34,8 @@
 		
 			<link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
 		 <script src="http://clinicupdate.com/documents/resources/js/jquery-2.2.3.min.js"></script>
+         
+        <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js');?>"></script>
     <link href="<?php echo site_url('assets/js/jquery.autocomplete.css')?>" rel="stylesheet">
 	
 	<!-- datatable starts -->
@@ -591,7 +593,10 @@ $().ready(function() {
             $("#div_has_main_compnay").removeClass("disabled");
         }
         else {
+            $("#main_company_name").val("");
+            $("#main_company_id").val(0);
             $("#div_has_main_compnay").addClass("disabled");
+            $("#suggesstion-company").hide();
         }
     });
 	

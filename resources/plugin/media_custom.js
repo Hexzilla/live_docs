@@ -1,5 +1,5 @@
 $(document).ready(function() {
-      var myhost='http://'+window.location.hostname+'/admin_lt';
+      var myhost='http://'+window.location.hostname+'/documents';
 	  //alert(myhost);
     //Example 1
     $('#filer_input').filer({
