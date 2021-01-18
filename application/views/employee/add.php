@@ -28,7 +28,7 @@
 						<label for="emp_name" class="control-label">إسم الموظف</label><span class="text-danger">*</span>
 						<div class="form-group">
 							<input type="text" name="emp_name" value="<?php echo $this->input->post('emp_name'); ?>" class="form-control" id="emp_name" />
-							<span class="text-danger"><?php echo form_error('emp_name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('emp_name');?></span>
 						</div>
 					</div>
 				</div>
@@ -89,3 +89,27 @@
       	</div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#emp_name").blur(function() {
+		$.ajax({
+    		type: "POST",
+			url: "<?php echo base_url();?>employee/check_name",
+			data: "name=" + $(this).val(),
+		    beforeSend: function() {
+			    
+		    },
+		    success: function(data) {
+				console.log('is_dup:' + data);
+			    if (data == "0") {
+					$("#name-text-danger").html("");
+				}
+				else {
+					$("#name-text-danger").html("The name is duplicated.");
+				}
+		    }
+		});
+	})
+});    
+</script>

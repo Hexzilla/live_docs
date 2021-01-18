@@ -10,6 +10,44 @@ class Company_model extends CI_Model
     {
         parent::__construct();
     }
+
+    /*
+     * Find company by name
+     */
+    function find_company($name)
+    {
+		$this->db->select('companyid');
+		$this->db->from('company AS C');		
+		$this->db->where('Name', $name);
+		$query = $this->db->get();
+		return $data = $query->result();
+    }
+
+    function is_duplicated_name($name, $editId)
+    {
+        if (empty($name)) {
+            return false;
+        }
+
+        $items = $this->find_company($name);
+		if (count($items) <= 0) {
+			return false;
+		}
+
+		if (empty($editId)) {
+            return true;
+        }
+
+        if (count($items) > 1) {
+            return true;
+        }
+
+        $item = $items[0];
+        if ($item->companyid != $editId) {
+            return true;
+        }
+        return false;
+    }
     
     /*
      * Get company by companyid

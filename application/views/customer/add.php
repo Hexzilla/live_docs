@@ -11,7 +11,7 @@
 						<label for="Customer_name" class="control-label"><span class="text-danger">*</span>إسم العميل</label>
 						<div class="form-group">
 							<input type="text" name="Customer_name" value="<?php echo $this->input->post('Customer_name'); ?>" class="form-control" id="Customer_name" />
-							<span class="text-danger"><?php echo form_error('Customer_name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('Customer_name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -72,3 +72,29 @@
       	</div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#Customer_name").blur(function() {
+		console.log($(this).val())
+		$.ajax({
+    		type: "POST",
+			url: "<?php echo base_url();?>customer/check_name",
+			data: "name=" + $(this).val(),
+		    beforeSend: function() {
+			    
+		    },
+		    success: function(data) {
+				console.log('is_dup:' + data);
+			    if (data == "0") {
+					$("#name-text-danger").html("");
+				}
+				else {
+					$("#name-text-danger").html("The name is duplicated.");
+				}
+		    }
+		});
+	})
+});    
+</script>

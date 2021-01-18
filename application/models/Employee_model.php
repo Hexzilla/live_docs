@@ -10,6 +10,44 @@ class Employee_model extends CI_Model
     {
         parent::__construct();
     }
+
+    /*
+     * Find company by name
+     */
+    function find_employee($name)
+    {
+		$this->db->select('employee_id as id');
+		$this->db->from('employees AS C');		
+		$this->db->where('emp_name', $name);
+		$query = $this->db->get();
+		return $data = $query->result();
+    }
+
+    function is_duplicated_name($name, $editId)
+    {
+        if (empty($name)) {
+            return false;
+        }
+
+        $items = $this->find_employee($name);
+		if (count($items) <= 0) {
+			return false;
+		}
+
+		if (empty($editId)) {
+            return true;
+        }
+
+        if (count($items) > 1) {
+            return true;
+        }
+
+        $item = $items[0];
+        if ($item->id != $editId) {
+            return true;
+        }
+        return false;
+    }
     
     /*
      * Get employee by employee_id

@@ -11,16 +11,12 @@ class Search extends CI_Controller{
 
     function index()
     {
-   
-		
-	
-
         $data=array();
 	
 		$Search=$this->input->post('search');
 		if(!empty($Search)){
      
-      $this->db->select('company.companyid,company.Name,company.companyNo ,company.CompType,company.CompReg,G.customer_id,customers.Customer_name as customer, company.email,company.Managerid,comptypes.name as CTypeName');
+      	$this->db->select('company.companyid,company.Name,company.companyNo ,company.CompType,company.CompReg,G.customer_id,customers.Customer_name as customer, company.email,company.Managerid,comptypes.name as CTypeName');
 		
         $this->db->from('company');
 		$this->db->join('get_company AS G','G.customer_id = company.companyid','inner');
@@ -30,14 +26,14 @@ class Search extends CI_Controller{
       //  $this->db->join('employees','company.Managerid=employees.employee_id','inner');
         $this->db->join('comptypes','company.CompType=comptypes.CompType','inner');
 		// 
-			$this->db->like('comptypes.name',$Search);
-			 $this->db->or_like('company.name',$Search);
-			$this->db->or_like('company.companyNo',$Search);	
-			$this->db->or_like('company.CompReg',$Search);
-			 $this->db->or_like('customers.Customer_name',$Search);
-			$this->db->or_like('company.email',$Search);
-			$this->db->group_by('G.customer_id');
-	        $this->db->order_by('G.customer_id', 'ASC');  
+		$this->db->like('comptypes.name',$Search);
+		$this->db->or_like('company.name',$Search);
+		$this->db->or_like('company.companyNo',$Search);	
+		$this->db->or_like('company.CompReg',$Search);
+		$this->db->or_like('customers.Customer_name',$Search);
+		$this->db->or_like('company.email',$Search);
+		$this->db->group_by('G.customer_id');
+		$this->db->order_by('G.customer_id', 'ASC');  
 			
 			
 		// }

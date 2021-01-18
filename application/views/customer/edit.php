@@ -11,7 +11,7 @@
 						<label for="Customer_name" class="control-label"><span class="text-danger">*</span>إسم العميل</label>
 						<div class="form-group">
 							<input type="text" name="Customer_name" value="<?php echo ($this->input->post('Customer_name') ? $this->input->post('Customer_name') : $customer['Customer_name']); ?>" class="form-control" id="Customer_name" />
-							<span class="text-danger"><?php echo form_error('Customer_name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('Customer_name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -20,7 +20,8 @@
 							<input type="text" name="Nationality" value="<?php echo ($this->input->post('Nationality') ? $this->input->post('Nationality') : $customer['Nationality']); ?>" class="form-control" id="Nationality" />
 						</div>
 					</div>
-					
+				</div>
+				<div class="row clearfix">
 					<div class="col-md-6">
 						<label for="Position" class="control-label">المنصب</label>
 						<div class="form-group">
@@ -73,3 +74,28 @@
 		</div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var edit_id = "<?php echo $customer['customer_id']; ?>";
+	$("#Customer_name").blur(function() {
+		console.log($(this).val())
+		$.ajax({
+    		type: "POST",
+			url: "<?php echo base_url();?>customer/check_name",
+			data: "name=" + $(this).val() + "&edit_id=" + edit_id,
+		    beforeSend: function() {
+		    },
+		    success: function(data) {
+				console.log('is_dup:' + data);
+			    if (data == "0") {
+					$("#name-text-danger").html("");
+				}
+				else {
+					$("#name-text-danger").html("The name is duplicated.");
+				}
+		    }
+		});
+	})
+});    
+</script>

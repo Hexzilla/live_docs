@@ -455,5 +455,12 @@ exit(); */
         else
             show_error('The company you are trying to delete does not exist.');
     }
-    
+	
+	function check_name()
+	{
+		$name = $_POST["name"];
+		$edit_id = $_POST["edit_id"];
+		$result = $this->Company_model->is_duplicated_name($name, $edit_id);
+		echo($result ? 1 : 0);
+	}
 }

@@ -25,7 +25,7 @@
 						<label for="Name" class="control-label"><span class="text-danger">*</span>الاسم</label>
 						<div class="form-group">
 							<input type="text" name="Name" value="<?php echo ($this->input->post('Name') ? $this->input->post('Name') : $company['Name']); ?>" class="form-control" id="Name" />
-							<span class="text-danger"><?php echo form_error('Name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('Name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -81,7 +81,7 @@
 							<label for="has_company" class="control-label" style="margin-right:8px;">Has a compnay</label>
 						</div>
 						<div  id="div_has_main_compnay" class="form-group <?php echo $comp_disabled; ?>">
-				            <input type="text" name="main_company_name" value="<?php echo $main_company_name; ?>" class="form-control" id="main_company_name" >
+				            <input type="text" name="main_company_name" value="<?php echo $main_company_name; ?>" class="form-control" id="main_company_name" autocomplete="off">
 							<input type="hidden" name="main_company_id" value="<?php echo $main_company_id; ?>" class="form-control" id="main_company_id" >
 							<div id="suggesstion-company"></div>
 							<span class="text-danger"><?php echo $err_main_company_id;?></span>
@@ -152,3 +152,29 @@
 		</div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var edit_id = "<?php echo $company['companyid']; ?>";
+	$("#Name").blur(function() {
+		console.log($(this).val())
+		$.ajax({
+    		type: "POST",
+			url: "<?php echo base_url();?>company/check_name",
+			data: "name=" + $(this).val() + "&edit_id=" + edit_id,
+		    beforeSend: function() {
+			    //$("#main_company_name").css("background", "#FFF url(<?php echo base_url();?>LoaderIcon.gif) no-repeat 165px");
+		    },
+		    success: function(data) {
+				console.log('is_dup:' + data);
+			    if (data == "0") {
+					$("#name-text-danger").html("");
+				}
+				else {
+					$("#name-text-danger").html("The name is duplicated.");
+				}
+		    }
+		});
+	})
+});    
+</script>

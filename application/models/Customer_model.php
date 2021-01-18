@@ -12,6 +12,44 @@ class Customer_model extends CI_Model
     }
     
     /*
+     * Find company by name
+     */
+    function find_customer($name)
+    {
+		$this->db->select('customer_id as id');
+		$this->db->from('customers AS C');		
+		$this->db->where('Customer_name', $name);
+		$query = $this->db->get();
+		return $data = $query->result();
+    }
+
+    function is_duplicated_name($name, $editId)
+    {
+        if (empty($name)) {
+            return false;
+        }
+
+        $items = $this->find_customer($name);
+		if (count($items) <= 0) {
+			return false;
+		}
+
+		if (empty($editId)) {
+            return true;
+        }
+
+        if (count($items) > 1) {
+            return true;
+        }
+
+        $item = $items[0];
+        if ($item->id != $editId) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
      * Get customer by customer_id
      */
     function get_customer($customer_id)

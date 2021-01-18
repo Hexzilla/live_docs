@@ -27,8 +27,16 @@ class Document_model extends CI_Model
         $data = $query->row_array();
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        $data['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('Y/m/d');
-        $data['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('Y-m-d');
+        if (!empty($data['issuedate'])) {
+             $issue_date = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('Y/m/d');
+             $issue_date = date('d/m/Y', strtotime($issue_date));
+             $data['issuedate'] = $issue_date;
+        }
+        if (!empty($data['expiredate'])) {
+            $expire_date = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('Y-m-d');
+            $expire_date = date('d/m/Y', strtotime($expire_date));
+            $data['expiredate'] = $expire_date;
+        }
 
         return $data;
 
@@ -52,7 +60,7 @@ class Document_model extends CI_Model
     public function get_expire_documents_count()
     {
         $this->db->from('documents');
-        $this->db->where('expiredate <=', date('Y-m-d'));
+        $this->db->where(array('expiredate is NOT '=> NULL, 'expiredate <=' => date('Y-m-d')));
 		
         return $this->db->count_all_results();
     }
@@ -81,10 +89,10 @@ class Document_model extends CI_Model
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        foreach($datas as $k => $data) {
+        //foreach($datas as $k => $data) {
           //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
           //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        }
+        //}
 
         return $datas;
 
@@ -108,15 +116,17 @@ class Document_model extends CI_Model
         $this->db->join('doctype', 'documents.doctype = doctype.id', 'inner');
         $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'inner');
         $this->db->join('company', 'documents.comapnyid=company.companyid', 'inner');
-	//	 $this->db->where('expiredate <=', date('Y-m-d'));
-	    $this->db->where('expiredate <= DATE_ADD(CURDATE(), INTERVAL -30 DAY)');
+        $this->db->where(array(
+            'expiredate is not ' => NULL, 
+            'expiredate <= ' => 'DATE_ADD(CURDATE(), INTERVAL -30 DAY)'
+        ));
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        foreach($datas as $k => $data) {
+        //foreach($datas as $k => $data) {
           //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
           //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        }
+        //}
 
         return $datas;
 
@@ -141,15 +151,19 @@ class Document_model extends CI_Model
         $this->db->join('doctype', 'documents.doctype = doctype.id', 'inner');
         $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'inner');
         $this->db->join('company', 'documents.comapnyid=company.companyid', 'inner');
-	    
-		 $this->db->where('expiredate <= DATE_ADD(CURDATE(), INTERVAL -60 DAY)');
+        
+        $this->db->where(array(
+            'expiredate is not ' => NULL, 
+            'expiredate <= ' => 'DATE_ADD(CURDATE(), INTERVAL -60 DAY)'
+        ));
+
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        foreach($datas as $k => $data) {
+        //foreach($datas as $k => $data) {
           //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
           //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        }
+        //}
 
         return $datas;
 
@@ -179,8 +193,14 @@ class Document_model extends CI_Model
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         foreach($datas as $k => $data) {
-            $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
-            $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
+            $issue_date = $data['issuedate'];
+            if (!empty($issue_date)) {
+                $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($issue_date)->format('d/m/Y');
+            }
+            $expire_date = $data['expiredate'];
+            if (!empty($expire_date)) {
+                $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($expire_date)->format('d/m/Y');
+            }
         }
 
         return $datas;
@@ -192,11 +212,12 @@ class Document_model extends CI_Model
         if (!$company_ids) {
             return [];
         }
-        $this->db->select('documents.*, company.Name AS company_name,doctype.name AS doctype_name');
+        $this->db->select('documents.*, company.Name AS company_name,doctype.name AS doctype_name, DA.*');
         $this->db->from('documents');
         $this->db->where_in('comapnyid', $company_ids);
         $this->db->join('company', 'company.companyid=documents.comapnyid', 'left');
         $this->db->join('doctype', 'doctype.id=documents.doctype', 'left');
+        $this->db->join('documents_attachment AS DA','DA.FK_DocID = documents.docid','left');
         return $this->db->get()->result_array();
     }
 
@@ -229,21 +250,31 @@ class Document_model extends CI_Model
     public function count_important()
     {
         $this->db->from('documents');
-        $this->db->where('expiredate <= CURDATE()');
+        $this->db->where(array(
+            'expiredate is not ' => NULL, 
+            'expiredate <= ' => 'CURDATE()'
+        ));
+
         return $this->db->count_all_results();
     }
 
     public function count_warning()
     {
         $this->db->from('documents');
-        $this->db->where('expiredate <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)');
+        $this->db->where(array(
+            'expiredate is not ' => NULL, 
+            'expiredate <= ' => 'DATE_ADD(CURDATE(), INTERVAL 30 DAY)'
+        ));
         return $this->db->count_all_results();
     }
 
     public function count_information()
     {
         $this->db->from('documents');
-        $this->db->where('expiredate <= DATE_ADD(CURDATE(), INTERVAL 60 DAY)');
+        $this->db->where(array(
+            'expiredate is not ' => NULL, 
+            'expiredate <= ' => 'DATE_ADD(CURDATE(), INTERVAL 60 DAY)'
+        ));
         return $this->db->count_all_results();
     }
 }

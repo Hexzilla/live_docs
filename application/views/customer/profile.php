@@ -145,7 +145,7 @@
 								<th>تنزيل</th>
 								<th>View</th>
                             </tr>
-                            <?php foreach ($documents as $document):?>
+                            <?php foreach ($documents as $document) { ?>
                                 <tr>
                                     <td><?php echo $document['company_name']?></td>
                                     <td><?php echo $document['doctype_name']?></td>
@@ -156,7 +156,7 @@
                                         <td><a href="<?php echo base_url().$document['attach']?>" target="blank"> View</a></td>
                                     <?php } ?>
                                 </tr>
-                            <?php endforeach;?>
+                            <?php } ?>
                         </table>
                     </div>
                     

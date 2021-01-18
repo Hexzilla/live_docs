@@ -100,22 +100,19 @@ class Employee extends CI_Controller{
             redirect('/');
         }
         // check if the employee exists before trying to edit it
-		    $data=array();
+		$data=array();
         $data['employee'] = $this->Employee_model->get_employee($employee_id);
 		
 	/* 	echo"<pre>";
 		print_r($data['employee']);
 		exit();
       */
-		$data['err_companyid']="";
-		$companyid=$this->input->post('companyid');
-		
-		if((empty($companyid))&&($_POST)){
-			
-			$data['err_companyid']="There is no companies, please Add a company first";
-		}		
+		$data['err_companyid'] = "";
+		$companyid = $this->input->post('companyid');
+		if ((empty($companyid)) && ($_POST)) {
+			$data['err_companyid'] = "There is no companies, please Add a company first";
+		}
 
-		
         if(isset($data['employee']['employee_id']))
         {
             $this->load->library('form_validation');
@@ -124,31 +121,25 @@ class Employee extends CI_Controller{
 			$this->form_validation->set_rules('emp_name','Emp Name','required');
 			$this->form_validation->set_rules('Ctype','Ctype','required');
 			$this->form_validation->set_rules('companyid','companyid','required');
-			if($this->form_validation->run())     
+            
+            if ($this->form_validation->run())     
             {   
-                
-				
 		        $comapnyid=$this->input->post('companyid');
 				$filess = $this->db->get_where('company', array('Name' =>$comapnyid))->row_array();
 
-				if(!empty($filess)){ 			
-				
-				
-				
-				
-				
-				$params = array(
-					'Remarks' => $this->input->post('Remarks'),
-					'Ctype' => $this->input->post('Ctype'),
-					'emp_name' => $this->input->post('emp_name'),
-					'companyid' => $filess['companyid'],
-					'email' => $this->input->post('email'),
-					'mobile' => $this->input->post('mobile'),
-					'Nationality' => $this->input->post('Nationality'),
-					'position' => $this->input->post('position'),
-                );
+				if (!empty($filess)) { 			
+                    $params = array(
+                        'Remarks' => $this->input->post('Remarks'),
+                        'Ctype' => $this->input->post('Ctype'),
+                        'emp_name' => $this->input->post('emp_name'),
+                        'companyid' => $filess['companyid'],
+                        'email' => $this->input->post('email'),
+                        'mobile' => $this->input->post('mobile'),
+                        'Nationality' => $this->input->post('Nationality'),
+                        'position' => $this->input->post('position'),
+                    );
 
-                $this->Employee_model->update_employee($employee_id,$params); 
+                    $this->Employee_model->update_employee($employee_id,$params); 
 				}				
                 redirect('employee/index');
             }
@@ -188,4 +179,12 @@ class Employee extends CI_Controller{
             show_error('The employee you are trying to delete does not exist.');
     }
     
+	
+	function check_name()
+	{
+		$name = $_POST["name"];
+		$edit_id = $_POST["edit_id"];
+		$result = $this->Employee_model->is_duplicated_name($name, $edit_id);
+		echo($result ? 1 : 0);
+	}
 }

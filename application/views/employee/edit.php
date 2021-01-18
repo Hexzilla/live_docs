@@ -24,26 +24,20 @@
 							<span class="text-danger"><?php echo form_error('Ctype');?></span>
 						</div>
 					</div>
-					
-					
-						<div class="col-md-6">
+					<div class="col-md-6">
 						<label for="companyid" class="control-label"><span class="text-danger">*</span>المنشأة</label>
 						<div class="form-group">
-						
-						<input type="text" name="companyid" value="<?php echo ($this->input->post('companyid') ? $this->input->post('companyid') : $employee['Name']); ?>" class="form-control" id="get_company" />
-						
-					
-				
+							<input type="text" name="companyid" value="<?php echo ($this->input->post('companyid') ? $this->input->post('companyid') : $employee['Name']); ?>" class="form-control" id="get_company" />
 							<span class="text-danger"><?php echo @$err_companyid;?></span>
 						</div>
 					</div>
-					
+				</div>
+				<div class="row clearfix">
 					<div class="col-md-6">
-						
 						<label for="emp_name" class="control-label"><span class="text-danger">*</span>إسم الموظف</label>
 						<div class="form-group">
 							<input type="text" name="emp_name" value="<?php echo ($this->input->post('emp_name') ? $this->input->post('emp_name') : $employee['emp_name']); ?>" class="form-control" id="emp_name" />
-							<span class="text-danger"><?php echo form_error('emp_name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('emp_name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -53,6 +47,8 @@
 							<span class="text-danger"><?php echo form_error('email');?></span>
 						</div>
 					</div>
+				</div>
+				<div class="row clearfix">
 					<div class="col-md-6">
 						<label for="mobile" class="control-label">الجوال</label>
 						<div class="form-group">
@@ -92,3 +88,28 @@
 		</div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var edit_id = "<?php echo $employee['employee_id']; ?>";
+	$("#emp_name").blur(function() {
+		console.log($(this).val())
+		$.ajax({
+    		type: "POST",
+			url: "<?php echo base_url();?>employee/check_name",
+			data: "name=" + $(this).val() + "&edit_id=" + edit_id,
+		    beforeSend: function() {
+		    },
+		    success: function(data) {
+				console.log('is_dup:' + data);
+			    if (data == "0") {
+					$("#name-text-danger").html("");
+				}
+				else {
+					$("#name-text-danger").html("The name is duplicated.");
+				}
+		    }
+		});
+	})
+});    
+</script>

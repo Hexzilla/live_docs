@@ -127,22 +127,43 @@ class Document extends CI_Controller
 
         if ($this->form_validation->run()) {
 
+            $_issue_date = $this->input->post('issuedate');
+            if (isset($_issue_date) && !empty($_issue_date)) {
+                // get hijri date
+                $issuedate = date('Y-m-d', strtotime(str_replace('/', '-', $_issue_date)));
+            }
 
-            // get hijri date
-            $issuedate = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('issuedate'))));
-            $expiredate = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('expiredate'))));
-
+            $_expire_date = $this->input->post('expiredate');
+            if (isset($_expire_date) && !empty($_expire_date)) {
+                $expiredate = date('Y-m-d', strtotime(str_replace('/', '-', $_expire_date)));
+            }
 
             // require lib to convert hijir to Gregorian
             require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR .'autoload.php';
 
-            // convert issuedate from hijri to Gregorian
-            $issuedate = explode('-', $issuedate);
-            $issuedate = \GeniusTS\HijriDate\Hijri::convertToGregorian($issuedate[2], $issuedate[1], $issuedate[0])->toDateString();
+            if (!empty($issuedate)) {
+                // convert issuedate from hijri to Gregorian
+                $issuedate = explode('-', $issuedate);
+                $issuedate = \GeniusTS\HijriDate\Hijri::convertToGregorian($issuedate[2], $issuedate[1], $issuedate[0])->toDateString();
+            }
 
-            // convert expiredate from hijri to Gregorian
-            $expiredate = explode('-', $expiredate);
-            $expiredate = \GeniusTS\HijriDate\Hijri::convertToGregorian($expiredate[2], $expiredate[1], $expiredate[0])->toDateString();;
+            if ($expiredate) {
+                // convert expiredate from hijri to Gregorian
+                $expiredate = explode('-', $expiredate);
+                $expiredate = \GeniusTS\HijriDate\Hijri::convertToGregorian($expiredate[2], $expiredate[1], $expiredate[0])->toDateString();
+            }
+
+
+            /*// Attach_File_To_Customer
+            $filess = array();
+            $dtype = $this->input->post('dtype');
+            $comapnyid = $this->input->post('comapnyid');
+            if ($dtype == 1) {
+                $filess = $this->db->get_where('customers', array('Customer_name' => $comapnyid))->row_array();
+            }
+            else {
+                $filess = $this->db->get_where('company', array('Name' => $comapnyid))->row_array();
+            }*/
 
             $comapnyid = $this->input->post('comapnyid');
             $filess = $this->db->get_where('company', array('Name' => $comapnyid))->row_array();
@@ -257,6 +278,18 @@ class Document extends CI_Controller
                 $expiredate = \GeniusTS\HijriDate\Hijri::convertToGregorian($expiredate[2], $expiredate[1], $expiredate[0])->toDateString();;
 
 
+                /*// Attach_File_To_Customer
+                $filess = array();
+                $dtype = $this->input->post('dtype');
+                $comapnyid = $this->input->post('comapnyid');
+                if ($dtype == 1) {
+                    $filess = $this->db->get_where('customers', array('Customer_name' => $comapnyid))->row_array();
+                }
+                else {
+                    $filess = $this->db->get_where('company', array('Name' => $comapnyid))->row_array();
+                }*/
+		
+		
                 $comapnyid = $this->input->post('comapnyid');
                 $filess = $this->db->get_where('company', array('Name' => $comapnyid))->row_array();
 

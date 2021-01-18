@@ -144,4 +144,11 @@ class Customer extends CI_Controller{
         redirect('customer/index');
     }
     
+	function check_name()
+	{
+		$name = $_POST["name"];
+		$edit_id = $_POST["edit_id"];
+		$result = $this->Customer_model->is_duplicated_name($name, $edit_id);
+		echo($result ? 1 : 0);
+	}
 }
