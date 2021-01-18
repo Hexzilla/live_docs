@@ -63,7 +63,6 @@
     padding: 2px 10px 3px 3px;
 }
 .my_delete, .com_delete {
-
     color: red;
     cursor: pointer;
     float: left;
@@ -73,13 +72,16 @@
 #list_boxs{}
 
 .my_deletes{
-	
     color: orange;
     cursor: pointer;
     float: left;	
 }
 
-
+[class^="ic_delete_"] {
+    color: red;
+    cursor: pointer;
+    float: left;	
+}
 
 #custom-search-input {
         margin:0;

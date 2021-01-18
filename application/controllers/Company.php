@@ -136,7 +136,7 @@ class Company extends CI_Controller{
 			$params = array(
 				'Remarks' => $this->input->post('Remarks'),
 				'CompType' => $this->input->post('CompType'),
-						//'Customer_id' => $files['customer_id'],
+				//'Customer_id' => $files['customer_id'],
 				'Managerid' => $this->input->post('Managerid'),
 				'Name' => $this->input->post('Name'),
 				'companyNo' => $this->input->post('companyNo'),
@@ -144,22 +144,30 @@ class Company extends CI_Controller{
 				'email' => $this->input->post('email'),
 				'main_company_id' => $main_company_id,
 			);
-				$company_id = $this->Company_model->add_company($params);
-				
-					
-				//  $insertId = $this->db->insert_id();
-				if (!empty($company_id)){
-					 $count = count($Customer_id);
-					for ($x = 0; $x < $count; $x++) {
-						$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$company_id );
-						$this->db->insert('get_company', $params2); 
-					} 
+			
+			$company_id = $this->Company_model->add_company($params);
+			//  $insertId = $this->db->insert_id();
+			if (!empty($company_id)){
+				$count = count($Customer_id);
+				for ($x = 0; $x < $count; $x++) {
+					$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$company_id );
+					$this->db->insert('get_company', $params2); 
+				} 
+			}
+
+			$partner_ids = $this->input->post('partner_id[]');
+			if (!empty($partner_ids)) {
+				$data = array();
+				foreach ($partner_ids as $parter_id) {
+					$data[] = array('company_id' => $company_id, 'partner_id' => $parter_id);
 				}
-		
-            redirect('company/index');
-        }
-        else
-        {
+				$this->db->insert_batch('company_partners', $data); 
+			}
+
+			redirect('company/index');
+		}
+		else
+		{
 			$this->load->model('Comptype_model');
 			$data['all_comptypes'] = $this->Comptype_model->get_all_comptypes();
 
@@ -211,10 +219,6 @@ class Company extends CI_Controller{
 			$data['err_customer_id']="There is no customers defined, please add customer first";
 		}			
 
-
-
-  
-					        
         if(!empty($data['company']['companyid']))
         {
             $this->load->library('form_validation');
@@ -223,7 +227,6 @@ class Company extends CI_Controller{
 			$this->form_validation->set_rules('Name','Name','required');
 			$this->form_validation->set_rules('CompType','CompType','required');
 			//$this->form_validation->set_rules('Customer_id[]','Customer Id','required');
-
 
 			//Has_main_company
 			$validated = 1;
@@ -238,7 +241,6 @@ class Company extends CI_Controller{
 			else {
 				$main_company_id = NULL;
 			}
-
 		
 			if( $validated == 1 && $this->form_validation->run())     
             {   
@@ -252,25 +254,31 @@ class Company extends CI_Controller{
 					'email' => $this->input->post('email'),
 					'main_company_id' => $main_company_id,
 				);
+				$this->Company_model->update_company($companyid, $params);  
 
-				$this->Company_model->update_company($companyid,$params);  
-
-				if(!empty($companyid)){
-					$count=count($Customer_id);
-											  
+				if (!empty($companyid)){
+					$count = count($Customer_id);
 					for ($x = 0; $x < $count; $x++) {
-							$new_arrs=$this->db->get_where('get_company', array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid ))->row_array();
-							if(empty($new_arrs)){
-								$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid );
-									$this->db->insert('get_company', $params2);
-							}
+						$new_arrs=$this->db->get_where('get_company', array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid ))->row_array();
+						if(empty($new_arrs)){
+							$params2 = array('customer_id'=>$Customer_id[$x],'companyid'=>$companyid );
+								$this->db->insert('get_company', $params2);
+						}
 					} 
 				}
 
-              $data['save_done']="Save done successfully";
+				$partner_ids = $this->input->post('partner_id[]');
+				if (!empty($partner_ids)) {
+					$data = array();
+					foreach ($partner_ids as $parter_id) {
+						$data[] = array('company_id' => $companyid, 'partner_id' => $parter_id);
+					}
+					$this->db->delete('company_partners', array('company_id'=>$companyid));
+					$this->db->insert_batch('company_partners', $data); 
+				}
 
+				$data['save_done']="Save done successfully";
 
-					
 		        $this->load->model('Comptype_model');
 				$data['all_comptypes'] = $this->Comptype_model->get_all_comptypes();
 
@@ -285,10 +293,6 @@ class Company extends CI_Controller{
 				$this->db->order_by("G.customer_id","ASC");
 				$data['custome'] =$this->db->get()->result_array();
 		
-/*  				echo"<pre>";
-				
-				print_r($data['custome']);
-exit(); */ 
 				$this->load->model('Employee_model');
 				$data['all_employees'] = $this->Employee_model->get_all_managers();
 
@@ -318,18 +322,20 @@ exit(); */
 				$this->load->model('Customer_model');
 				$data['all_customers'] = $this->Customer_model->get_all_customers();
 				
-				
 				$this->db->select('G.customer_id,C.Customer_name,C.Nationality,C.email,C.mobile,C.IDcard,C.Position,C.Remarks,G.companyid,G.id');
 				$this->db->from('customers AS C');
 				$this->db->join('get_company AS G','C.customer_id=G.customer_id');
 				$this->db->where('G.companyid',$companyid);
 				$this->db->order_by("G.customer_id","ASC");
-				$data['custome'] =$this->db->get()->result_array();
+				$data['custome'] = $this->db->get()->result_array();
+
+				//partners
+				$this->db->select('P.company_id, P.partner_id, C.Name as partner_company_name');
+				$this->db->from('company_partners AS P');
+				$this->db->join('company AS C','C.companyid = P.partner_id');
+				$this->db->where('P.company_id', $companyid);
+				$data['partners'] = $this->db->get()->result_array();
 		
-/*  				echo"<pre>";
-				
-				print_r($data['custome']);
-exit(); */ 
 				$this->load->model('Employee_model');
 				$data['all_employees'] = $this->Employee_model->get_all_managers();
 
@@ -429,10 +435,38 @@ exit(); */
 		}
     }
 	
-	
-	
-	 
-	 
+    function get_partner()
+    {
+		$q = strtolower($_POST["keyword"]);
+		
+		$role_id = $_POST["role_id"];
+		$myrole = "";
+		
+		if (!empty($role_id)) {
+			$explode = explode(",", $role_id);
+			if (!empty($explode)) {
+				foreach ($explode as $key => $value) {
+					$myrole = $myrole . 'companyid !=' . $value . ' and ';
+				}
+			}
+		}
+				
+		if (!$q) {
+			return;
+		}
+
+		$sql = "select * from company where ".$myrole." 1=1 and Name LIKE '%$q%' ORDER BY Name LIMIT 0,6";
+		$query = $this->db->query($sql)->result_array();
+		if (!empty($query)) {
+			?>
+			<ul id="country-list">
+			<?php foreach($query as $country) { ?>
+			<li onClick="selectPartner('<?php echo $country["companyid"]; ?>,<?php echo $country["Name"]; ?>');"><?php echo $country["Name"]; ?></li>
+			<?php } ?>
+			</ul>
+			<?php
+		}
+    }
 	 
     function remove($companyid)
     {
