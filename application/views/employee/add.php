@@ -28,7 +28,7 @@
 						<label for="emp_name" class="control-label">إسم الموظف</label><span class="text-danger">*</span>
 						<div class="form-group">
 							<input type="text" name="emp_name" value="<?php echo $this->input->post('emp_name'); ?>" class="form-control" id="emp_name" />
-							<span id="name-text-danger" class="text-danger"><?php echo form_error('emp_name');?></span>
+							<span class="text-danger"><?php echo form_error('emp_name');?></span>
 						</div>
 					</div>
 				</div>
@@ -73,6 +73,7 @@
 						<label for="Remarks" class="control-label">رقم الهوية</label>
 						<div class="form-group">
 							<input type="text" name="Remarks" value="<?php echo $this->input->post('Remarks'); ?>" class="form-control" id="Remarks" />
+							<span class="text-danger"><?php echo form_error('Remarks');?></span>
 						</div>
 					</div>
 				</div>

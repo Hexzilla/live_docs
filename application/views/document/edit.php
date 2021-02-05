@@ -75,11 +75,12 @@
 
                         <div class='input-group date' id='datetimepicker1'>
                             <input type='text' class="form-control" name="issuedate"
-                                   value="<?php echo($this->input->post('issuedate') ? $this->input->post('issuedate') : $document['issuedate']); ?>"/>
+                                   value="<?php echo($this->input->post('issuedate') ? $this->input->post('issuedate') : date('d/m/Y', strtotime($document['issuedate']))); ?>"/>
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>
                         </div>
+
 
                     </div>
                     <div class="col-md-6">
@@ -93,7 +94,7 @@
 
                         <div class='input-group date' id='datetimepicker2'>
                             <input type='text' class="form-control" name="expiredate"
-                                   value="<?php echo($this->input->post('expiredate') ? $this->input->post('expiredate') : $document['expiredate']); ?>"/>
+                                   value="<?php echo($this->input->post('expiredate') ? $this->input->post('expiredate') : date('d/m/Y', strtotime($document['expiredate']))); ?>"/>
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>

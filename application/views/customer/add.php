@@ -11,7 +11,7 @@
 						<label for="Customer_name" class="control-label"><span class="text-danger">*</span>إسم العميل</label>
 						<div class="form-group">
 							<input type="text" name="Customer_name" value="<?php echo $this->input->post('Customer_name'); ?>" class="form-control" id="Customer_name" />
-							<span id="name-text-danger" class="text-danger"><?php echo form_error('Customer_name');?></span>
+							<span class="text-danger"><?php echo form_error('Customer_name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -41,6 +41,7 @@
 						<label for="IDcard" class="control-label">رقم الهوية</label>
 						<div class="form-group">
 							<input type="text" name="IDcard" value="<?php echo $this->input->post('IDcard'); ?>" class="form-control" id="IDcard" />
+							<span class="text-danger"><?php echo form_error('IDcard');?></span>
 						</div>
 					</div>
 					

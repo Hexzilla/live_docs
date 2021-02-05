@@ -12,7 +12,7 @@
 
 						<div class="form-group">
 							<input type="text" name="Name" value="<?php echo $this->input->post('Name'); ?>" class="form-control" id="Name" />
-							<span id="name-text-danger" class="text-danger"><?php echo form_error('Name'); ?></span>
+							<span class="text-danger"><?php echo form_error('Name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -96,12 +96,14 @@
 						<label for="companyNo" class="control-label">رقم المنشأة</label>
 						<div class="form-group">
 							<input type="text" name="companyNo" value="<?php echo $this->input->post('companyNo'); ?>" class="form-control" id="companyNo" />
+							<span class="text-danger"><?php echo form_error('companyNo');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="CompReg" class="control-label">رقم التسجيل</label>
 						<div class="form-group">
 							<input type="text" name="CompReg" value="<?php echo $this->input->post('CompReg'); ?>" class="form-control" id="CompReg" />
+							<span class="text-danger"><?php echo form_error('CompReg');?></span>
 						</div>
 					</div>
 				</div>

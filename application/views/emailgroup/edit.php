@@ -25,12 +25,16 @@
                                     </div>
                             </div>
                         </div>
+
                     <div class="row">
-                        <div class="col-md-12" style="padding-right:22px;">
-                            <input type="checkbox" id="selectall" value="0"/>
-                            <label for="selectall" style="margin-right:8px;"> اختر الكل</label>
+                        <div class="col-md-6">
+                            <input type="text" id="search_text" class="form-control" placeholder="Search"/>
                         </div>
-                    </div>    
+                        <div class="col-md-6 form-check">
+							<input type="checkbox" class="form-check-input" id="select_all" />
+							<label for="select_all" class="control-label" style="margin-right:8px;"> اختر الكل</label>
+						</div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                              <table class="table table-striped table-list">
@@ -92,9 +96,33 @@
 </div>
 <script>
  $(document).ready(function(){
-    $('#lists').change(function(){
+    $("#select_all").on('click', function() {
+        const checked = $(this).is(":checked")
+        $('#loadList input[type=checkbox]').prop('checked', checked)
+    })
+
+    $("#search_text").keyup(function() {
+        const keyword = $(this).val()
+        let trs = $('#loadList > tr')
+        trs && trs.length > 0 && trs.each(function(index) {
+            let name = $(this).find('td.name > font > font')
+            if (name && name.length > 0 && name.html().indexOf(keyword) >= 0) {
+                $(this).show()
+                return
+            }
+            let email = $(this).find('td.email > font > font')
+            if (email && email.length > 0 && email.html().indexOf(keyword) >= 0) {
+                $(this).show()
+                return
+            }
+            $(this).hide()
+        })
+    });
+
+     $('#lists').change(function(){
+        $("#select_all").prop('checked', false);
          var tblname=$(this).val();
-         console.log(tblname);
+
          $.post( "<?php echo site_url()?>emailgroup/loadData", { tblname: tblname },  function( data ) {
             if(data){
 				  $( ".hide-item" ).addClass('show-item');
@@ -112,14 +140,12 @@
     $('#add_t').on('click', function(){
         var values = new Array();
         var i = 1;
-        $.each($("input[name='list_ids[]']:checked").closest("tr"),
-            function () {
-                var oList = $('#finalList').html();
-                console.log('name'+$(this).children('td.name').text());
-                console.log('email'+$(this).children('td.email').text());
-                        if(oList.indexOf($(this).children('td.email').text()) != -1){
-                            console.log($(this).children('td.email').text()+' already at the list');
-                        }else{
+     $.each($("input[name='list_ids[]']:checked").closest("tr"),
+       function () {
+           var oList = $('#finalList').html();
+                if(oList.indexOf($(this).children('td.email').text()) != -1){
+                    console.log($(this).children('td.email').text()+' already at the list');
+                }else{
                 
                 var nt='<tr><td><input type="text" name="name[]" value="'+$(this).children('td.name').text()+'"/></td>';
                     nt=nt+'<td><input type="text" name="email[]" value="'+$(this).children('td.email').text()+'"/></td><td><p class="btn btn-danger"><i class="fa fa-trash-o"></i></p></td></tr>'; 
@@ -133,17 +159,14 @@
             //console.log(values);
     });
      
-    $("#selectall").change(function() {
-        var checked = this.checked;
-        $("input[name='list_ids[]']").each(function() {
-            this.checked = checked;
-        })
-    });
- });
+   
+
+     
+     
+ })
  
 $(document).delegate('.btn.btn-danger', 'click', function(){
      $(this).closest('tr').remove();
-    console.log('hello');
 }); 
     
  </script>

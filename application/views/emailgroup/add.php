@@ -25,6 +25,16 @@
                                     </div>
                             </div>
                         </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="search_text" class="form-control" placeholder="Search"/>
+                        </div>
+                        <div class="col-md-6 form-check">
+							<input type="checkbox" class="form-check-input" id="select_all" />
+							<label for="select_all" class="control-label" style="margin-right:8px;"> اختر الكل</label>
+						</div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-striped table-list">
@@ -83,15 +93,40 @@
 </div>
 <script>
  $(document).ready(function(){
+    
+    $("#select_all").on('click', function() {
+        const checked = $(this).is(":checked")
+        $('#loadList input[type=checkbox]').prop('checked', checked)
+    })
+
+    $("#search_text").keyup(function() {
+        const keyword = $(this).val()
+        let trs = $('#loadList > tr')
+        trs && trs.length > 0 && trs.each(function(index) {
+            let name = $(this).find('td.name > font > font')
+            if (name && name.length > 0 && name.html().indexOf(keyword) >= 0) {
+                $(this).show()
+                return
+            }
+            let email = $(this).find('td.email > font > font')
+            if (email && email.length > 0 && email.html().indexOf(keyword) >= 0) {
+                $(this).show()
+                return
+            }
+            $(this).hide()
+        })
+    });
+
      $('#lists').change(function(){
+        $("#select_all").prop('checked', false);
          var tblname=$(this).val();
 
          $.post( "<?php echo site_url()?>emailgroup/loadData", { tblname: tblname },  function( data ) {
             if(data){
-                $( ".hide-item" ).addClass('show-item');
-                $( "#loadList" ).html( data );
+                $(".hide-item").addClass('show-item');
+                $("#loadList").html( data );
             }else{
-                $( "#loadList" ).html( '' );
+                $("#loadList").html( '' );
             }
          });
          if($(this).val()===""){
@@ -103,11 +138,9 @@
          
      var values = new Array();
      var i=1;
-$.each($("input[name='list_ids[]']:checked").closest("tr"),
+     $.each($("input[name='list_ids[]']:checked").closest("tr"),
        function () {
            var oList = $('#finalList').html();
-           console.log('name'+$(this).children('td.name').text());
-           console.log('email'+$(this).children('td.email').text());
                 if(oList.indexOf($(this).children('td.email').text()) != -1){
                     console.log($(this).children('td.email').text()+' already at the list');
                 }else{
@@ -131,7 +164,6 @@ $.each($("input[name='list_ids[]']:checked").closest("tr"),
  
  $(document).delegate('.btn.btn-danger', 'click', function(){
      $(this).closest('tr').remove();
-    console.log('row removed');
 }); 
     
  </script>

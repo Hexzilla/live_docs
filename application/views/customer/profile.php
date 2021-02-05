@@ -80,15 +80,23 @@
                                 <th>المدير</th>
                                 <th>الجوال</th>
                             </tr>
-                            <?php foreach ($companies as $company):?>
+                            <?php foreach ($companies as $company) { ?>
                                 <tr>
-                                    <td><?php echo $company['Name']?></td>
-                                    <td><?php echo $company['comptypes_name']?></td>
+                                    <td>
+                                        <a href="<?php echo base_url().'company/profile/'.$company['companyid'] ?>">
+                                            <?php echo $company['Name']?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="<?php echo base_url().'comptype/edit/'.$company['CompType'] ?>">
+                                            <?php echo $company['comptypes_name']?>
+                                        </a>
+                                    </td>
                                     <td><?php echo $company['CompReg']?></td>
                                     <td><?php echo $company['manager_name']?></td>
                                     <td><?php echo $company['manager_mobile']?></td>
                                 </tr>
-                            <?php endforeach;?>
+                            <?php } ?>
                         </table>
                     </div>
                     
@@ -112,14 +120,18 @@
                                 <th>الجوال</th>
                                 <th>البريد الالكتروني</th>
                             </tr>
-                            <?php foreach ($employees as $employee):?>
+                            <?php foreach ($employees as $employee) { ?>
                                 <tr>
-                                    <td><?php echo $employee['emp_name']?></td>
+                                    <td>
+                                        <a href="<?php echo base_url().'employee/edit/'.$employee['employee_id'] ?>">
+                                            <?php echo $employee['emp_name']?>
+                                        </a>
+                                    </td>
                                     <td><?php echo $employee['position']?></td>
                                     <td><?php echo $employee['mobile']?></td>
                                     <td><?php echo $employee['email']?></td>
                                 </tr>
-                            <?php endforeach;?>
+                            <?php } ?>
                         </table>
                     </div>
                     
@@ -147,9 +159,21 @@
                             </tr>
                             <?php foreach ($documents as $document) { ?>
                                 <tr>
-                                    <td><?php echo $document['company_name']?></td>
-                                    <td><?php echo $document['doctype_name']?></td>
-                                    <td><?php echo $document['docno']?></td>
+                                    <td>
+                                        <a href="<?php echo base_url().'company/profile/'.$document['company_id'] ?>">
+                                            <?php echo $document['company_name']?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="<?php echo base_url().'doctype/edit/'.$document['doctype'] ?>">
+                                            <?php echo $document['doctype_name']?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="<?php echo base_url().'document/edit/'.$document['docid'] ?>">
+                                            <?php echo $document['docno']?>
+                                        </a>
+                                    </td>
                                     <td><?php echo $document['expiredate']?></td>
                                     <?php if  (!empty($document['attach'])) { ?>
                                         <td><a href="<?php echo base_url().$document['attach']?>" download> DOWNLOAD</a></td>

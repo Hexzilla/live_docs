@@ -57,7 +57,8 @@ class Customer extends CI_Controller{
         }
         $this->load->library('form_validation');
 
-		$this->form_validation->set_rules('Customer_name','Customer Name','required|min_length[2]|max_length[60]|is_unique[customers.Customer_name]');
+		$this->form_validation->set_rules('Customer_name','اسم العميل','required|min_length[2]|max_length[60]|is_unique[customers.Customer_name]');
+		$this->form_validation->set_rules('IDcard','رقم الهوية','required|min_length[2]|max_length[60]|is_unique[customers.IDCARD]');
 		
 		if($this->form_validation->run())     
         {   

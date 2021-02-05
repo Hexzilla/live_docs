@@ -51,10 +51,9 @@
                             <?php echo $companies['manager_mobile'] ?>
                         </div-->
                     </div>
-                    
-            
-                    
                 </div>
+
+
                 <div class="box box-default box-solid">
                     <div class="box-header with-border">
                       <h3 class="box-title">العملآء</h3>
@@ -74,20 +73,53 @@
                                 <th>رقم الهوية</th>
 								 <th>المنصب</th>
                             </tr>
-                            <?php foreach ($customers as $company):?>
+                            <?php foreach ($customers as $company) { ?>
                                 <tr>
-                                    <td><?php echo $company['Customer_name']?></td>
+                                    <td><a href="<?php echo base_url().'customer/profile/'.$company['customer_id'] ?>"><?php echo $company['Customer_name']?></a></td>
                                     <td><?php echo $company['Nationality']?></td>
                                     <td><?php echo $company['email']?></td>
                                     <td><?php echo $company['mobile']?></td>
                                     <td><?php echo $company['Position']?></td>
                                 </tr>
-                            <?php endforeach;?>
+                            <?php } ?>
                         </table>
                     </div>
-                    
                 </div>
                 
+
+                <div class="box box-default box-solid collapsed-box">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">Partner List</h3>
+                      <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>الاسم</th>
+                                <th>البريد الالكتروني</th>
+                                <th>رقم المنشأة</th> 
+                                <th>نوع المنشأة</th>
+                                <th>اسم المدير</th> 
+                            </tr>
+                            <?php foreach ($partners as $partner) { ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo base_url().'company/profile/'.$partner['companyid'] ?>"><?php echo $partner['Name']?>
+                                        </a>
+                                    </td>
+                                    <td><?php echo $partner['email']?></td>
+                                    <td><?php echo $partner['companyNo']?></td>
+                                    <td><?php echo $partner['comptypes_name']?></td>
+                                    <td><?php echo $partner['manager_name']?></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="box box-default box-solid collapsed-box">
                     <div class="box-header with-border">
                       <h3 class="box-title">الموظفين</h3>
@@ -108,7 +140,7 @@
                             </tr>
                             <?php foreach ($employees as $employee):?>
                                 <tr>
-                                    <td><?php echo $employee['emp_name']?></td>
+                                    <td><a href="<?php echo base_url().'employee/edit/'.$employee['employee_id'] ?>"><?php echo $employee['emp_name']?></a></td>
                                     <td><?php echo $employee['position']?></td>
                                     <td><?php echo $employee['mobile']?></td>
                                     <td><?php echo $employee['email']?></td>
@@ -141,9 +173,17 @@
                             </tr>
                             <?php foreach ($documents as $document):?>
                                 <tr>
-                                    <td><?php echo $companies['Name'] ?></td>
-                                    <td><?php echo $document['doctype_name']?></td>
-                                    <td><?php echo $document['docno']?></td>
+                                    <td><a href="#"><?php echo $companies['Name'] ?></a></td>
+                                    <td>
+                                        <a href="<?php echo base_url().'doctype/edit/'.$document['doctype'] ?>">
+                                            <?php echo $document['doctype_name']?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="<?php echo base_url().'document/edit/'.$document['docid'] ?>">
+                                            <?php echo $document['docno']?>
+                                        </a>
+                                    </td>
                                     <td><?php echo $document['expiredate']?></td>
 								<!-- <td><a href="<?php echo  base_url().$document['attach']?>" download> DOWNLOAD</a></td> -->
 									

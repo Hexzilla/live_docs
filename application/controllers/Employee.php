@@ -41,9 +41,10 @@ class Employee extends CI_Controller{
         $data=array();
 		$data['err_companyid']="";
 		$this->form_validation->set_rules('email','Email','valid_email');
-		$this->form_validation->set_rules('emp_name','Employee Name','required|min_length[2]|max_length[60]|is_unique[employees.emp_name]');
+		$this->form_validation->set_rules('emp_name','اسم الموظف','required|min_length[2]|max_length[60]|is_unique[employees.emp_name]');
 		$this->form_validation->set_rules('Ctype','Ctype','required');
 		$this->form_validation->set_rules('companyid','Companyid','required');
+		$this->form_validation->set_rules('Remarks','رقم الهوية','required|min_length[2]|max_length[255]|is_unique[employees.Remarks]');
 		$companyid=$this->input->post('companyid');
 		
 		if((empty($companyid))&&($_POST)){

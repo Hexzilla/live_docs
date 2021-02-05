@@ -124,8 +124,18 @@
           	</div>
             <?php echo form_close(); ?>
       	</div>
+		 <?php if($message[0]['status']!='send'){?>
+        <a class="btn btn-primary" href="<?php echo site_url()."sendit/index/$id"?>">ارسل</a>
+        <?php }else{?>
+        <a class="btn btn-primary" href="<?php echo site_url()."sendit/index/$id"?>">إعادة الارسال</a>
+        <?php } ?>
+		
+		
     </div>
 </div>
+
+
+
 <style>
     .mce-notification {
     display: none!important;

@@ -27,45 +27,50 @@ class Company extends CI_Controller{
 		$this->db->join('get_company AS G','G.companyid = company.companyid','left');
         $this->db->join('comptypes','comptypes.CompType=company.CompType','left');
         $this->db->join('employees','company.Managerid=employees.employee_id','left');
-		 $this->db->group_by('company.companyid'); 
- $this->db->order_by('company.companyid', 'asc');
+        $this->db->group_by('company.companyid'); 
+        $this->db->order_by('company.companyid', 'asc');
         $this->db->where('company.companyid', $customer_id);	
 		$val_cam =$this->db->get()->row_array();
 		$data['companies']=$val_cam;
 		$data['customers']="";
 		$data['employees']="";
 		$data['documents']="";
-       // echo "<pre>";print_r($data);exit;	
+		$data['partners']="";
 	
 		
         if(empty($data['companies'])){
             show_error('The company you are trying to view does not exist.');
-        
 		}
 		
         if(!empty($data['companies'])){
-		$this->db->select('G.companyid,C.customer_id,C.Customer_name,C.Nationality,C.email,C.mobile,C.IDcard,C.Position,C.Remarks');
-		$this->db->from('customers AS C');
-		$this->db->join('get_company AS G','G.customer_id = C.customer_id','left');		
-		$this->db->where('G.companyid',$data['companies']['companyid']);
-		$data['customers'] =$this->db->get()->result_array();
-	
-		$this->db->select('*');
-		$this->db->from('employees');
-		$this->db->where('companyid',$data['companies']['companyid']);
-		$data['employees'] =$this->db->get()->result_array();
+			$this->db->select('G.companyid,C.customer_id,C.Customer_name,C.Nationality,C.email,C.mobile,C.IDcard,C.Position,C.Remarks');
+			$this->db->from('customers AS C');
+			$this->db->join('get_company AS G','G.customer_id = C.customer_id','left');		
+			$this->db->where('G.companyid',$data['companies']['companyid']);
+			$data['customers'] =$this->db->get()->result_array();
 		
-		
-		$this->db->select('D.docid,D.docno,D.issuedate,D.expiredate,D.warndays,D.comapnyid,D.doctype,D.dtype,D.Remarks,DC.name,DD.name as doctype_name,DD.warndays as warndays_doctype,DA.PK_MediaID,DA.extension,DA.date,DA.type,DA.Path,DA.filename,DA.attach');
-		$this->db->from('documents AS D');
-		$this->db->join('dcategory AS DC','DC.dtype = D.dtype','inner');
-		$this->db->join('doctype AS DD','DD.id = D.doctype','inner');
-		$this->db->join('documents_attachment AS DA','DA.FK_DocID = D.docid','left');
-		$this->db->where('D.comapnyid',$data['companies']['companyid']);
-		$data['documents'] =$this->db->get()->result_array();
-        	
-     }		
-		
+			$this->db->select('*');
+			$this->db->from('employees');
+			$this->db->where('companyid',$data['companies']['companyid']);
+			$data['employees'] =$this->db->get()->result_array();
+			
+			
+			$this->db->select('D.docid,D.docno,D.issuedate,D.expiredate,D.warndays,D.comapnyid,D.doctype,D.dtype,D.Remarks,DC.name,DD.name as doctype_name,DD.warndays as warndays_doctype,DA.PK_MediaID,DA.extension,DA.date,DA.type,DA.Path,DA.filename,DA.attach');
+			$this->db->from('documents AS D');
+			$this->db->join('dcategory AS DC','DC.dtype = D.dtype','inner');
+			$this->db->join('doctype AS DD','DD.id = D.doctype','inner');
+			$this->db->join('documents_attachment AS DA','DA.FK_DocID = D.docid','left');
+			$this->db->where('D.comapnyid',$data['companies']['companyid']);
+			$data['documents'] =$this->db->get()->result_array();
+
+			$this->db->select('C.*, comptypes.Name AS comptypes_name, employees.emp_name AS manager_name');
+			$this->db->from('company_partners AS G');
+			$this->db->join('company AS C','C.companyid = G.partner_id', 'left');
+			$this->db->join('comptypes','comptypes.CompType = C.CompType','left');
+			$this->db->join('employees','C.Managerid = employees.employee_id', 'left');
+			$this->db->where('G.company_id', $customer_id);
+			$data['partners'] = $this->db->get()->result_array();
+		}		
 		
         $this->load->view('layouts/main',$data);
     }	
@@ -108,7 +113,11 @@ class Company extends CI_Controller{
         $this->load->library('form_validation');
 
 		$this->form_validation->set_rules('email','Email','valid_emails');
-		$this->form_validation->set_rules('Name','Name','required|min_length[2]|max_length[60]|is_unique[company.Name]');
+		$this->form_validation->set_rules('Name','اسم المنشأة','required|min_length[2]|max_length[255]|is_unique[company.Name]');
+		$this->form_validation->set_rules('companyNo','رقم المنشأة','required|min_length[2]|max_length[60]|is_unique[company.companyNo]');
+		$this->form_validation->set_rules('CompReg','رقم التسجيل','required|min_length[2]|max_length[60]|is_unique[company.CompReg]');
+		
+		
 		$this->form_validation->set_rules('CompType','CompType','required');
 		$this->form_validation->set_rules('Customer_id[]','Customer Id','required');
 				

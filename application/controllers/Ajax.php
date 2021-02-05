@@ -51,18 +51,6 @@ class Ajax extends CI_Controller{
 						
 					}
 				}
-
-				/*$sql = "select DISTINCT Customer_name from customers where Customer_name LIKE '%$q%'";
-				$query = $this->db->query($sql)->result_array();
-				if(!empty($query)){
-					foreach ($query as $row){
-						
-						$cname = $row['Customer_name'];
-					    echo "$cname\n";
-						
-						
-					}
-				}*/
 				
 				
     }	

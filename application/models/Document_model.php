@@ -82,17 +82,17 @@ class Document_model extends CI_Model
 
         $this->db->from('documents');
         //$this->db->join('customers', 'company.customer_id = customers.customer_id');
-        $this->db->join('doctype', 'documents.doctype = doctype.id', 'inner');
-        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'inner');
-        $this->db->join('company', 'documents.comapnyid=company.companyid', 'inner');
-	//	 $this->db->where('expiredate <=', date('Y-m-d'));
+        $this->db->join('doctype', 'documents.doctype = doctype.id', 'left');
+        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'left');
+        $this->db->join('company', 'documents.comapnyid=company.companyid', 'left');
+	    $this->db->where('expiredate <=', date('Y-m-d'));
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        //foreach($datas as $k => $data) {
-          //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
-          //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        //}
+        foreach($datas as $k => $data) {
+            $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
+            $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
+        }
 
         return $datas;
 
@@ -113,9 +113,9 @@ class Document_model extends CI_Model
 
         $this->db->from('documents');
         //$this->db->join('customers', 'company.customer_id = customers.customer_id');
-        $this->db->join('doctype', 'documents.doctype = doctype.id', 'inner');
-        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'inner');
-        $this->db->join('company', 'documents.comapnyid=company.companyid', 'inner');
+        $this->db->join('doctype', 'documents.doctype = doctype.id', 'left');
+        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'left');
+        $this->db->join('company', 'documents.comapnyid=company.companyid', 'left');
         $this->db->where(array(
             'expiredate is not ' => NULL, 
             'expiredate <= ' => 'DATE_ADD(CURDATE(), INTERVAL -30 DAY)'
@@ -123,10 +123,10 @@ class Document_model extends CI_Model
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        //foreach($datas as $k => $data) {
-          //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
-          //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        //}
+        foreach($datas as $k => $data) {
+            $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
+            $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
+        }
 
         return $datas;
 
@@ -148,9 +148,9 @@ class Document_model extends CI_Model
 
         $this->db->from('documents');
         //$this->db->join('customers', 'company.customer_id = customers.customer_id');
-        $this->db->join('doctype', 'documents.doctype = doctype.id', 'inner');
-        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'inner');
-        $this->db->join('company', 'documents.comapnyid=company.companyid', 'inner');
+        $this->db->join('doctype', 'documents.doctype = doctype.id', 'left');
+        $this->db->join('dcategory', 'documents.dtype=dcategory.dtype', 'left');
+        $this->db->join('company', 'documents.comapnyid=company.companyid', 'left');
         
         $this->db->where(array(
             'expiredate is not ' => NULL, 
@@ -160,10 +160,10 @@ class Document_model extends CI_Model
         $datas = $this->db->get()->result_array();
 
         require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        //foreach($datas as $k => $data) {
-          //  $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
-          //  $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
-        //}
+        foreach($datas as $k => $data) {
+            $datas[$k]['issuedate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['issuedate'])->format('d/m/Y');
+            $datas[$k]['expiredate'] = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('d/m/Y');
+        }
 
         return $datas;
 
@@ -212,7 +212,7 @@ class Document_model extends CI_Model
         if (!$company_ids) {
             return [];
         }
-        $this->db->select('documents.*, company.Name AS company_name,doctype.name AS doctype_name, DA.*');
+        $this->db->select('documents.*, company.companyid as company_id,company.Name AS company_name,doctype.name AS doctype_name, DA.*');
         $this->db->from('documents');
         $this->db->where_in('comapnyid', $company_ids);
         $this->db->join('company', 'company.companyid=documents.comapnyid', 'left');
