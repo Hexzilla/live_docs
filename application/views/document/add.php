@@ -65,7 +65,7 @@
 						</div> -->
 
 						<div class='input-group date' id='datetimepicker1'>
-							<input type='text' class="form-control" name="issuedate" />
+							<input type='text' class="form-control" name="issuedate" value="<?php echo($this->input->post('issuedate')); ?>"/>
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>
@@ -78,7 +78,7 @@
 						</div> -->
 
 						<div class='input-group date' id='datetimepicker2'>
-							<input type='text' class="form-control" name="expiredate" />
+							<input type='text' class="form-control" name="expiredate" value="<?php echo($this->input->post('expiredate')); ?>" />
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>

@@ -44,8 +44,8 @@ insert  into `company`(`companyid`,`Name`,`companyNo`,`CompType`,`CompReg`,`emai
 (4,'شركة الجاسرية المتقدمة للمقاولات المحدودة ','',2,'4030570580','',0,'',0),
 (5,'شركة الجاسرية المتطورة للزراعة','',2,'4030329004','',200,'',0),
 (6,'شركة نهار الدولية','',2,'4030238667','',0,'',0),
-(7,'ggggggggggggggggggg','',7,'','',0,'',0),
-(103,'aaa','',2,'4030238667','',0,'',0),
+(7,'ggggggggggggggggggg','',7,'','',2,'',0),
+(103,'tatatata','',7,'4030238667','',2,'',0),
 (104,'bbb','',1,'4030238667','',0,'',0),
 (105,'Stronghold','',7,'','tester@gmail.com',2,'',106),
 (106,'HoldingStorm','',5,'','ahmadyasser7@outlook.com',2,'',0),
@@ -69,7 +69,7 @@ CREATE TABLE `company_partners` (
   `company_id` int(11) NOT NULL,
   `partner_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `company_partners` */
 
@@ -79,7 +79,13 @@ insert  into `company_partners`(`id`,`company_id`,`partner_id`) values
 (39,117,106),
 (40,117,115),
 (41,118,106),
-(42,118,105);
+(42,118,105),
+(45,103,103),
+(46,103,104),
+(47,103,111),
+(48,2,114),
+(49,2,104),
+(50,2,103);
 
 /*Table structure for table `comptypes` */
 
@@ -184,8 +190,8 @@ DROP TABLE IF EXISTS `documents`;
 CREATE TABLE `documents` (
   `docid` int(11) NOT NULL AUTO_INCREMENT,
   `docno` varchar(100) NOT NULL,
-  `issuedate` date NOT NULL,
-  `expiredate` date NOT NULL,
+  `issuedate` date DEFAULT NULL,
+  `expiredate` date DEFAULT NULL,
   `warndays` int(3) NOT NULL,
   `comapnyid` int(11) NOT NULL,
   `doctype` int(11) NOT NULL,
@@ -195,13 +201,13 @@ CREATE TABLE `documents` (
   KEY `comapnyid` (`comapnyid`),
   KEY `doctype` (`doctype`),
   KEY `dtype` (`dtype`)
-) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8;
 
 /*Data for the table `documents` */
 
 insert  into `documents`(`docid`,`docno`,`issuedate`,`expiredate`,`warndays`,`comapnyid`,`doctype`,`dtype`,`Remarks`) values 
 (5,'4030171884','2007-08-18','2022-11-14',30,2,7,1,''),
-(6,'504037444','2532-11-30','2532-11-30',10,2,8,1,''),
+(6,'504037444','2021-02-08','2021-02-08',10,2,8,1,''),
 (7,'3000963124','2532-11-30','2021-09-07',60,2,9,1,''),
 (8,'39111426853','2020-09-29','2021-09-19',60,2,10,1,''),
 (9,'4030166899','2007-02-18','2021-09-25',30,3,7,1,''),
@@ -215,7 +221,7 @@ insert  into `documents`(`docid`,`docno`,`issuedate`,`expiredate`,`warndays`,`co
 (19,'507528678','2018-02-20','2020-11-18',10,6,8,2,''),
 (20,'40082115098','2020-04-03','2021-03-23',60,6,10,2,''),
 (21,'30107346415','2532-11-30','2021-03-27',60,6,9,2,''),
-(22,'4030469482','2017-01-04','2020-09-29',30,7,7,2,''),
+(22,'4030469482','2021-01-28','2021-02-08',3000000,7,7,2,''),
 (23,'4030280133','2015-01-21','2016-12-30',30,8,7,2,''),
 (24,'508610068','2532-11-30','2015-10-28',10,8,8,2,''),
 (25,'209782','2532-11-30','2532-11-30',30,8,16,2,''),
@@ -224,7 +230,11 @@ insert  into `documents`(`docid`,`docno`,`issuedate`,`expiredate`,`warndays`,`co
 (28,'4030287435','2016-01-31','2020-12-06',30,10,7,2,''),
 (29,'510051017','2018-10-07','2019-09-26',10,10,8,2,''),
 (30,'3100287167','2532-11-30','2532-11-30',60,10,9,2,''),
-(31,'237074','2016-10-02','2017-09-20',30,10,16,2,'');
+(31,'237074','2016-10-02','2017-09-20',30,10,16,2,''),
+(189,'',NULL,NULL,60,114,19,2,''),
+(190,'',NULL,NULL,102,116,17,1,''),
+(191,'123123','2021-01-14','2021-01-23',30,116,15,2,'ggg'),
+(192,'','2021-01-28',NULL,60000000,117,19,1,'');
 
 /*Table structure for table `documents_attachment` */
 
@@ -240,14 +250,17 @@ CREATE TABLE `documents_attachment` (
   `filename` mediumtext NOT NULL,
   `attach` mediumtext NOT NULL,
   PRIMARY KEY (`PK_MediaID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 /*Data for the table `documents_attachment` */
 
 insert  into `documents_attachment`(`PK_MediaID`,`extension`,`date`,`type`,`FK_DocID`,`Path`,`filename`,`attach`) values 
 (1,'pdf','2020-11-23 00:36:09','application',5,'media/2020/11/23','السجل التجاري.pdf','media/2020/11/23/1606113369.pdf'),
 (2,'doc','2020-12-23 18:43:24','application',22,'media/2020/12/23','Changes.doc','media/2020/12/23/1608745404.doc'),
-(3,'pdf','2020-12-23 18:44:50','application',22,'media/2020/12/23','Docker Deep Dive ( PDFDrive ).pdf','media/2020/12/23/1608745490.pdf');
+(3,'pdf','2020-12-23 18:44:50','application',22,'media/2020/12/23','Docker Deep Dive ( PDFDrive ).pdf','media/2020/12/23/1608745490.pdf'),
+(4,'jpg','2021-02-08 13:58:15','image',189,'media/2021/02/08','15.jpg','media/2021/02/08/1612789095.jpg'),
+(5,'jpg','2021-02-08 14:00:48','image',190,'media/2021/02/08','16.jpg','media/2021/02/08/1612789248.jpg'),
+(6,'jpg','2021-02-08 14:01:12','image',22,'media/2021/02/08','16.jpg','media/2021/02/08/1612789272.jpg');
 
 /*Table structure for table `emailgroups` */
 
@@ -260,7 +273,7 @@ CREATE TABLE `emailgroups` (
   `created` varchar(25) NOT NULL,
   `modified` varchar(25) NOT NULL,
   PRIMARY KEY (`groupid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `emailgroups` */
 
@@ -270,7 +283,8 @@ insert  into `emailgroups`(`groupid`,`groupname`,`groupcount`,`created`,`modifie
 (3,'الايميل',1,'2018-12-11 22:06:56','2018-12-11 22:06:56'),
 (4,'تصويت الغرفة التجارية',498,'2019-03-27 12:55:10','2019-03-27 12:55:10'),
 (5,'الميزانية',27,'2020-08-12 05:08:07','2020-08-12 05:08:07'),
-(6,'تجربة',1,'2020-11-26 05:00:51','2020-11-26 05:00:51');
+(6,'تجربة',1,'2020-11-26 05:00:51','2020-11-26 05:00:51'),
+(7,'fffgggffggfg',6,'2021-02-05 16:02:26','2021-02-05 16:02:26');
 
 /*Table structure for table `emailsettings` */
 
@@ -330,7 +344,7 @@ CREATE TABLE `employees` (
 /*Data for the table `employees` */
 
 insert  into `employees`(`employee_id`,`companyid`,`emp_name`,`email`,`mobile`,`Nationality`,`position`,`Ctype`,`Remarks`) values 
-(1,3,'مصطفى كايد محمد ابورمضان','mustafa.kai@gmail.com','0543499774','فلسطيني بوثيقة مصرية','فني حاسب آلي',2,'2047086174'),
+(1,3,'abc','mustafa.kai@gmail.com','0543499774','فلسطيني بوثيقة مصرية','فني حاسب آلي',2,'2047086174'),
 (2,2,'مراد مصلح عطيه الحارثي','al-harthe93@hotmail.com','0504855047','سعودي','معقب',1,'1083924652'),
 (3,14,'ابراهيم عوضه على الشدوى ','','','سعودي','مدير ',1,''),
 (4,165,'ايمن ابراهيم محمد المصرى ','','','سعودي','مدير',1,''),
@@ -383,7 +397,7 @@ CREATE TABLE `get_company` (
   `customer_id` int(100) NOT NULL,
   `companyid` int(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=154 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=155 DEFAULT CHARSET=latin1;
 
 /*Data for the table `get_company` */
 
@@ -498,6 +512,7 @@ insert  into `get_company`(`id`,`customer_id`,`companyid`) values
 (114,86,88),
 (115,87,89),
 (116,88,89),
+(154,109,103),
 (118,88,90),
 (119,90,91),
 (120,91,92),
@@ -545,12 +560,18 @@ CREATE TABLE `grdetails` (
   `created` varchar(25) NOT NULL,
   `modified` varchar(25) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `grdetails` */
 
 insert  into `grdetails`(`id`,`groupid`,`name`,`email`,`status`,`created`,`modified`) values 
-(2,6,'مصطفى رمضان','mustafakaid@gmail.com',0,'2020-12-20 22:41:09','2020-12-20 22:41:09');
+(2,6,'مصطفى رمضان','mustafakaid@gmail.com',0,'2020-12-20 22:41:09','2020-12-20 22:41:09'),
+(3,7,'Stronghold','tester@gmail.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27'),
+(4,7,'HoldingStorm','ahmadyasser7@outlook.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27'),
+(5,7,'hhhhhhhhhhhhhhhhhhh','ahmadyasser7@outlook.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27'),
+(6,7,'XXXXXXXXXXXXXXXXXXXX','x@gmail.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27'),
+(7,7,'StormKitty_Update','ssss@gmail.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27'),
+(8,7,'StrongBox','StrongBox@hotmail.com',0,'2021-02-05 16:02:27','2021-02-05 16:02:27');
 
 /*Table structure for table `letters` */
 
@@ -586,7 +607,7 @@ CREATE TABLE `message` (
   `created` varchar(25) NOT NULL,
   `modified` varchar(25) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 /*Data for the table `message` */
 
@@ -598,7 +619,8 @@ insert  into `message`(`id`,`subject`,`content`,`mailto`,`toemail`,`mailcc`,`att
 (5,'aaaaaaaaaaaaaa','ggggggggggg','','test','gggggggggggggg','1.7z','','21/12/2020','pending','2020-12-21 07:12:50','2020-12-21 07:12:50'),
 (6,'aaooooooooooooooooooooooooooooooooooo','hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh','','ahmadyasser7@outlook.com','gggggggggggggg','','d69e77a952de527dce0ebc1db649d589.7z,5d935b58a1720c2dd390f529440d6558.7z,5ab20cfc94170f8508a85d97786de2c1.7z','23/12/2020','pending','2020-12-22 18:21:24','2020-12-22 18:21:24'),
 (7,'xxxxxxxxxxxxxx','xxxxxxxxxxxxxxx','','ahmadyasser7@outlook.com','xxxxxxxxxxxxxxxxx','100.7z,101.7z,102.7z','f54e456bd92697306dd85b6b4ede65f2.7z,fe268c08bdb0ebe3a0b8c6c5b871a0c5.7z,71821e71d7f696ca2bedec3533af77cd.7z','21/12/2020','send','2020-12-22 18:22:15','2020-12-22 18:22:15'),
-(8,'aaooooooooooooooooooooooooooooooooooo','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','3','skonkseter@gmail.com','gggggggggggggg','100.7z,101.7z,102.7z','11ea16e400a16f741b42ff9eaefa4f68.7z,c0b61bb8837a2aa695a3b3ddca4ca69a.7z,6936c6c0b335ff7578b5e69b2bec2740.7z','23/12/2020','send','2020-12-22 18:30:56','2020-12-22 18:30:56');
+(8,'aaooooooooooooooooooooooooooooooooooo','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','3','skonkseter@gmail.com','gggggggggggggg','100.7z,101.7z,102.7z','11ea16e400a16f741b42ff9eaefa4f68.7z,c0b61bb8837a2aa695a3b3ddca4ca69a.7z,6936c6c0b335ff7578b5e69b2bec2740.7z','23/12/2020','send','2020-12-22 18:30:56','2020-12-22 18:30:56'),
+(9,'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb','<p><strong><font style=\"vertical-align: inherit;\"><font style=\"vertical-align: inherit;\">aaaaaaaaaaaaaaaaaa</font></font></strong></p>\r\n\r\n<blockquote>\r\n<p><strong><font style=\"vertical-align: inherit;\"><font style=\"vertical-align: inherit;\">bbbbbbbbbbbbbbbb</font></font></strong></p>\r\n</blockquote>\r\n\r\n<p><strong><img alt=\"AAAAAA\" src=\"https://ckeditor.com/assets/images/header/ckeditor-4-0da1800a0c.png\" style=\"height:38px; width:200px\" /></strong></p>\r\n','1,2','geeeeeee@gmail.com','','','','25/03/2021','pending','2021-02-05 23:12:44','2021-02-05 23:12:44');
 
 /*Table structure for table `user_group` */
 

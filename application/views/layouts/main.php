@@ -35,7 +35,6 @@
 			<link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
 		 <script src="http://clinicupdate.com/documents/resources/js/jquery-2.2.3.min.js"></script>
          
-        <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js');?>"></script>
     <link href="<?php echo site_url('assets/js/jquery.autocomplete.css')?>" rel="stylesheet">
 	
 	<!-- datatable starts -->

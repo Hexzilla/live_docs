@@ -1,3 +1,4 @@
+<?php $base_url = base_url(); ?>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content modal-lg">
@@ -67,15 +68,18 @@
                             <th>العملية</th>
                           </tr>
                           <?php if (!empty($customers)) {
-                            foreach ($customers as $c) { ?>
+                            foreach ($customers as $c) { 
+                              $customer_id = $c['customer_id'];
+                              $format = "<td><a href='{$base_url}customer/profile/{$customer_id}'>%s</a></td>";    
+                          ?>
                               <tr>
-                                <td><?php echo $c['customer_id']; ?></td>
-                                <td><a href='<?php echo base_url(); ?>customer/profile/<?php echo $c['customer_id'] ?>'><?php echo $c['Customer_name']; ?></a></td>
-                                <td><?php echo $c['Nationality']; ?></td>
-                                <td><?php echo $c['email']; ?></td>
-                                <td><?php echo $c['mobile']; ?></td>
-                                <td><?php echo $c['IDcard']; ?></td>
-                                <td><?php echo $c['Position']; ?></td>
+                                <?php echo sprintf($format, $c['customer_id']) ?>
+                                <?php echo sprintf($format, $c['Customer_name']) ?>
+                                <?php echo sprintf($format, $c['Nationality']) ?>
+                                <?php echo sprintf($format, $c['email']) ?>
+                                <?php echo sprintf($format, $c['mobile']) ?>
+                                <?php echo sprintf($format, $c['IDcard']) ?>
+                                <?php echo sprintf($format, $c['Position']) ?>
                                 <td><a data-toggle="modal" data-listing="<table class='table'><tr><th>Customer ID</th><th>Customer Name</th><th>Nationality</th><th>Email</th><th>Mobile</th><th>ID Card</th><th>Position</th></tr><tr><td><?php echo $c['customer_id']; ?></td><td><?php echo $c['Customer_name']; ?></td><td><?php echo $c['Nationality']; ?></td><td><?php echo $c['email']; ?></td><td><?php echo $c['mobile']; ?></td><td><?php echo $c['IDcard']; ?></td><td><?php echo $c['Position']; ?></td></tr></table>" data-target="#exampleModal" class="Show_details">view</a></td>
                               </tr>
                           <?php }
@@ -114,18 +118,24 @@
 
                       </tr>
                       <?php if (!empty($company)) {
-                        foreach ($company as $c) { ?>
+                        foreach ($company as $c) { 
+                          $company_id = $c['companyid'];
+                          $format = "<td><a href='{$base_url}company/profile/{$company_id}'>%s</a></td>";    
+                      ?>
                           <tr>
-                            <td><?php echo $c['companyid']; ?></td>
-                            <td><?php echo $c['Name']; ?></td>
-                            <td><?php echo $c['CTypeName']; ?></td>
-                            <td><a href='<?php echo base_url(); ?>customer/profile/<?php echo $c['companyid'] ?>'><?php echo $c['customer']; ?></a></td>
-                            <!--  <td><?php echo $c['manager']; ?></td> -->
-                            <td><?php echo $c['companyNo']; ?></td>
-                            <td><?php echo $c['CompReg']; ?></td>
+                            <?php echo sprintf($format, $c['companyid']) ?>
+                            <?php echo sprintf($format, $c['Name']) ?>
+                            <?php echo sprintf($format, $c['CTypeName']) ?>
+                            <td>
+                              <a href='<?php echo base_url(); ?>customer/profile/<?php echo $c['companyid'] ?>'>
+                                <?php echo $c['customer']; ?>
+                              </a>
+                            </td>
+                            <?php echo sprintf($format, $c['companyNo']) ?>
+                            <?php echo sprintf($format, $c['CompReg']) ?>
                             <?php
-                            $company_no = implode('<br>', str_split($c['companyNo'], 12));
-                            $company_name = implode('<br>', str_split($c['Name'], 12));
+                              $company_no = implode('<br>', str_split($c['companyNo'], 12));
+                              $company_name = implode('<br>', str_split($c['Name'], 12));
                             ?>
                             <td><a data-toggle="modal" data-listing="<table class='table-responsive'><tr><th>Company ID</th><th>Name</th><th>Company Type</th><th>Customer</th><th>Company No</th><th>Registeration</th></tr><tr><td><?php echo $c['companyid']; ?></td><td><?php echo $company_name; ?></td><td><?php echo $c['CTypeName']; ?></td><td><?php echo $c['customer']; ?></td><td><?php echo $company_no; ?></td><td><?php echo $c['CompReg']; ?></td></tr>  </table>" data-target="#exampleModal" class="Show_details">view</a></td>
 
@@ -163,16 +173,17 @@
 
                       </tr>
                       <?php if (!empty($employees)) {
-                        foreach ($employees as $e) { ?>
+                        foreach ($employees as $e) { 
+                          $employee_id = $e['employee_id'];
+                          $format = "<td><a href='{$base_url}employee/edit/{$employee_id}'>%s</a></td>";    
+                      ?>
                           <tr>
-                            <td><?php echo $e['employee_id']; ?></td>
-                            <td><?php echo $e['empposition']; ?></td>
-                            <td><a href='<?php echo base_url(); ?>employee/edit/<?php echo $e['employee_id'] ?>'><?php echo $e['emp_name']; ?></a></td>
-                            <td><?php echo $e['companyname']; ?></td>
-                            <td><?php echo $e['email']; ?></td>
-                            <td><?php echo $e['mobile']; ?></td>
-                            <!-- <td><?php echo $e['Nationality']; ?></td> -->
-                            <!--  <td><?php echo $e['position']; ?></td> -->
+                            <?php echo sprintf($format, $e['employee_id']) ?>
+                            <?php echo sprintf($format, $e['empposition']) ?>
+                            <?php echo sprintf($format, $e['emp_name']) ?>
+                            <?php echo sprintf($format, $e['companyname']) ?>
+                            <?php echo sprintf($format, $e['email']) ?>
+                            <?php echo sprintf($format, $e['mobile']) ?>
 
                             <td><a data-toggle="modal" data-listing="<table class='table'><tr><th>Employee ID</th><th>Type</th><th>Employee Name</th><th>Companyid</th><th>Email</th><th>Mobile</th></tr><tr><td><?php echo $e['employee_id']; ?></td><td><?php echo $e['empposition']; ?></td><td><?php echo $e['emp_name']; ?></td><td><?php echo $e['companyname']; ?></td><td><?php echo $e['email']; ?></td><td><?php echo $e['mobile']; ?></td></tr></table>" data-target="#exampleModal" class="Show_details">view</a></td>
                           </tr>
@@ -209,20 +220,26 @@
                         <th>أيام التنبيه</th>
                         <th>العملية</th>
                       </tr>
-                      <?php if (!empty($documents)) {
-                        foreach ($documents as $d) { ?>
+                      <?php if (!empty($documents)) {                        
+                        foreach ($documents as $d) { 
+                          $doc_id = $d['docid'];
+                          $format = "<td><a href='{$base_url}document/edit/{$doc_id}'>%s</a></td>";
+                        ?>
                           <tr>
-                            <td><?php echo $d['docid']; ?></td>
-                            <!--  <td><?php echo $d['Remarks']; ?></td> -->
-                            <td><a href='<?php echo base_url(); ?>company/profile/<?php echo $d['comapnyid'] ?>'><?php echo $d['compname']; ?></a></td>
-                            <td><?php echo $d['docname']; ?></td>
-                            <td><?php echo $d['category']; ?></td>
-                            <td><?php echo $d['docno']; ?></td>
-                            <td><?php echo $d['issuedate']; ?></td>
-                            <td><?php echo $d['expiredate']; ?></td>
-                            <td><?php echo $d['warndays']; ?></td>
+                            <?php echo sprintf($format, $d['docid']) ?>
+                            <td>
+                              <a href='<?php echo base_url(); ?>company/profile/<?php echo $d['comapnyid'] ?>'>
+                                <?php echo $d['compname']; ?>
+                              </a>
+                            </td>
+                            <?php echo sprintf($format, $d['docname']) ?>
+                            <?php echo sprintf($format, $d['category']) ?>
+                            <?php echo sprintf($format, $d['docno']) ?>
+                            <?php echo sprintf($format, $d['issuedate']) ?>
+                            <?php echo sprintf($format, $d['expiredate']) ?>
+                            <?php echo sprintf($format, $d['warndays']) ?>
                             <?php
-                            $company_name = implode('<br>', str_split($d['compname'], 12));
+                              $company_name = implode('<br>', str_split($d['compname'], 12));
                             ?>
                             <td><a data-toggle="modal" data-listing="<table><tr><th>#</th><th>Comapny Name</th><th>Document Type</th><th>Category</th><th>Document No</th><th>Issue Date</th><th>Expire Date</th><th>Warndays</th></tr> <tr><td><?php echo $d['docid']; ?></td><td><?php echo $company_name; ?></td><td><?php echo $d['docname']; ?></td><td><?php echo $d['category']; ?></td><td><?php echo $d['docno']; ?></td><td><?php echo $d['issuedate']; ?></td><td><?php echo $d['expiredate']; ?></td><td><?php echo $d['warndays']; ?></td></tr></table>" data-target="#exampleModal" class="Show_details">view</a></td>
                     </table>

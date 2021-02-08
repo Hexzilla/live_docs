@@ -12,7 +12,7 @@
 
 						<div class="form-group">
 							<input type="text" name="Name" value="<?php echo $this->input->post('Name'); ?>" class="form-control" id="Name" />
-							<span class="text-danger"><?php echo form_error('Name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('Name');?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -159,7 +159,7 @@
 					//$("#main_company_name").css("background", "#FFF url(<?php echo base_url(); ?>LoaderIcon.gif) no-repeat 165px");
 				},
 				success: function(data) {
-					console.log('is_dup:' + data)
+					//console.log('is_dup:' + data)
 					if (data == "0") {
 						$("#name-text-danger").html("")
 					} else {

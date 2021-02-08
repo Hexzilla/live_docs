@@ -102,16 +102,21 @@
     })
 
     $("#search_text").keyup(function() {
-        const keyword = $(this).val()
+        const keyword = $(this).val().toLowerCase()
         let trs = $('#loadList > tr')
         trs && trs.length > 0 && trs.each(function(index) {
-            let name = $(this).find('td.name > font > font')
-            if (name && name.length > 0 && name.html().indexOf(keyword) >= 0) {
+            if (keyword.length <= 0) {
                 $(this).show()
                 return
             }
-            let email = $(this).find('td.email > font > font')
-            if (email && email.length > 0 && email.html().indexOf(keyword) >= 0) {
+
+            let name = $(this).find('td.name')
+            if (name && name.length > 0 && name.html().toLowerCase().indexOf(keyword) >= 0) {
+                $(this).show()
+                return
+            }
+            let email = $(this).find('td.email')
+            if (email && email.length > 0 && email.html().toLowerCase().indexOf(keyword) >= 0) {
                 $(this).show()
                 return
             }

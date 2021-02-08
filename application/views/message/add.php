@@ -1,3 +1,5 @@
+<script type="text/javascript" src="<?php echo site_url('resources/assets/ckeditor/ckeditor.js'); ?>"></script>
+
 <div class="row">
     <div class="col-md-12">
       	<div class="box box-info">
@@ -33,9 +35,11 @@
 					</div>
 					<div class="col-md-12">
 						<label for="subject" class="control-label">محتوى الرسالة <span class="text-danger">*</span></label>
-						<div class="form-group">
-						
-                                                        <textarea rows="12" cols="50" name="content" class="form-control"></textarea>
+						<div class="form-group">						
+                            <textarea rows="12" cols="50" id="content" name="content" class="form-control"></textarea>
+                            <script>
+                                CKEDITOR.replace('content');
+                            </script>
 						</div>
 					</div>
                                 <div class="form-group">

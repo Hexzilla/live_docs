@@ -264,19 +264,31 @@ class Document extends CI_Controller
             $this->form_validation->set_rules('comapnyid', 'Comapnyid', 'required');
 
             if ($this->form_validation->run()) {
-                $issuedate = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('issuedate'))));
-                $expiredate = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('expiredate'))));
-
                 require_once APPPATH . 'vendor' . DIRECTORY_SEPARATOR .'autoload.php';
 
-                // convert issuedate from hijri to Gregorian
-                $issuedate = explode('-', $issuedate);
-                $issuedate = \GeniusTS\HijriDate\Hijri::convertToGregorian($issuedate[2], $issuedate[1], $issuedate[0])->toDateString();
+                $issuedate = $this->input->post('issuedate');
+                if (!empty($issuedate)) {
+                    $issuedate = date('Y-m-d', strtotime(str_replace('/', '-', $issuedate)));
 
-                // convert expiredate from hijri to Gregorian
-                $expiredate = explode('-', $expiredate);
-                $expiredate = \GeniusTS\HijriDate\Hijri::convertToGregorian($expiredate[2], $expiredate[1], $expiredate[0])->toDateString();;
+                    // convert issuedate from hijri to Gregorian
+                    $issuedate = explode('-', $issuedate);
+                    $issuedate = \GeniusTS\HijriDate\Hijri::convertToGregorian($issuedate[2], $issuedate[1], $issuedate[0])->toDateString();
+                }
+                else {
+                    $issuedate = NULL;
+                }
+                
+                $expiredate = $this->input->post('expiredate');
+                if (!empty($expiredate)) {
+                    $expiredate = date('Y-m-d', strtotime(str_replace('/', '-', $expiredate)));
 
+                    // convert expiredate from hijri to Gregorian
+                    $expiredate = explode('-', $expiredate);
+                    $expiredate = \GeniusTS\HijriDate\Hijri::convertToGregorian($expiredate[2], $expiredate[1], $expiredate[0])->toDateString();
+                }
+                else {
+                    $expiredate = NULL;
+                }
 
                 /*// Attach_File_To_Customer
                 $filess = array();
@@ -295,8 +307,6 @@ class Document extends CI_Controller
 
 
                 if (!empty($filess)) {
-
-
                     $params = array(
                         'Remarks' => $this->input->post('Remarks'),
                         'comapnyid' => $filess['companyid'],

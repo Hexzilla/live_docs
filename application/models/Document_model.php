@@ -32,10 +32,16 @@ class Document_model extends CI_Model
              $issue_date = date('d/m/Y', strtotime($issue_date));
              $data['issuedate'] = $issue_date;
         }
+        else {
+            $data['issuedate'] = "";
+        }
         if (!empty($data['expiredate'])) {
             $expire_date = \GeniusTS\HijriDate\Hijri::convertToHijri($data['expiredate'])->format('Y-m-d');
             $expire_date = date('d/m/Y', strtotime($expire_date));
             $data['expiredate'] = $expire_date;
+        }
+        else {
+            $data['expiredate'] = "";
         }
 
         return $data;
