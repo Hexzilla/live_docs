@@ -51,7 +51,6 @@
 
             for (const i in table_data) {
                 let item = table_data[i]
-                console.log('item', item)
                 if (!showAll && item.status !== "1") {
                     continue
                 }
@@ -102,10 +101,11 @@
 
         $.ajax({
             type: "GET",
-            url: "<?php echo base_url(); ?>company/get_all_company",
+            url: "<?php echo base_url(); ?>company/list",
             success: function(data) {
                 table_data = JSON.parse(data);
-                updateTable(false)
+                const checked = $("#show_all_items").prop('checked');
+                updateTable(checked)
             }
         })
 

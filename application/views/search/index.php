@@ -178,13 +178,15 @@
                       <?php if (!empty($employees)) {
                         foreach ($employees as $e) { 
                           $employee_id = $e['employee_id'];
-                          $format = "<td><a href='{$base_url}employee/edit/{$employee_id}'>%s</a></td>";    
+                          $format = "<td><a href='{$base_url}employee/edit/{$employee_id}'>%s</a></td>";
+                          $company_id = $e['companyid'];
+                          $format_company = "<td><a href='{$base_url}company/edit/{$company_id}'>%s</a></td>";
                       ?>
                           <tr>
                             <?php echo sprintf($format, $e['employee_id']) ?>
                             <?php echo sprintf($format, $e['empposition']) ?>
                             <?php echo sprintf($format, $e['emp_name']) ?>
-                            <?php echo sprintf($format, $e['companyname']) ?>
+                            <?php echo sprintf($format_company, $e['companyname']) ?>
                             <?php echo sprintf($format, $e['email']) ?>
                             <?php echo sprintf($format, $e['mobile']) ?>
 

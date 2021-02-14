@@ -97,7 +97,7 @@ class Company extends CI_Controller{
         $this->load->view('layouts/main',$data);
     }
 
-	function get_all_company() {
+	function list() {
 		$company = $this->Company_model->get_all_company();
 		echo json_encode($company);
 	}
@@ -296,6 +296,7 @@ class Company extends CI_Controller{
 					$this->db->insert_batch('company_partners', $data); 
 				}
 
+				$data['company']['status'] = $active_state;
 				$data['save_done']="Save done successfully";
 
 		        $this->load->model('Comptype_model');

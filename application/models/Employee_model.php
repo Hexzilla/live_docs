@@ -54,20 +54,12 @@ class Employee_model extends CI_Model
      */
     function get_employee($employee_id)
     {
-        
-		
-		
-				$this->db->select('D.employee_id,D.companyid,D.emp_name,D.email,D.mobile,D.Nationality,D.position,D.Ctype,D.Remarks,CC.Name ');
+		$this->db->select('D.status,D.employee_id,D.companyid,D.emp_name,D.email,D.mobile,D.Nationality,D.position,D.Ctype,D.Remarks,CC.Name ');
 		$this->db->from('employees AS D');
 		$this->db->join('company AS CC','D.companyid=CC.companyid');
 		$this->db->where('employee_id',$employee_id);
 		$query=$this->db->get();
 		return $data=$query->row_array();
-		
-		
-		 
-		
-
     }
     
     /*
@@ -90,7 +82,7 @@ class Employee_model extends CI_Model
             $this->db->limit($params['limit'], $params['offset']);
         }
       //  return $this->db->get('employees')->result_array();
-	      $this->db->select('employees.employee_id,employees.companyid,employees.emp_name ,employees.email,employees.mobile,employees.Nationality,employees.position,employees.Ctype,employees.Remarks,company.Name as companyname, emptypes.ctname as empposition ');
+	      $this->db->select('employees.status,employees.employee_id,employees.companyid,employees.emp_name ,employees.email,employees.mobile,employees.Nationality,employees.position,employees.Ctype,employees.Remarks,company.Name as companyname, emptypes.ctname as empposition ');
 		
         $this->db->from('employees');
         //$this->db->join('customers', 'company.customer_id = customers.customer_id');

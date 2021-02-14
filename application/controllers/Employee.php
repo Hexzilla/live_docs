@@ -22,12 +22,18 @@ class Employee extends CI_Controller{
         $config = $this->config->item('pagination');
         $config['base_url'] = site_url('employee/index?');
         $config['total_rows'] = $this->Employee_model->get_all_employees_count();
-        $this->pagination->initialize($config); */
+        $this->pagination->initialize($config);
 
-        $data['employees'] = $this->Employee_model->get_all_employees($params);
+        $data['employees'] = $this->Employee_model->get_all_employees($params); */
         
         $data['_view'] = 'employee/index';
         $this->load->view('layouts/main',$data);
+    }
+
+    function list()
+    {
+        $employee = $this->Employee_model->get_all_employees();
+        echo json_encode($employee);
     }
 
     /*
@@ -51,8 +57,12 @@ class Employee extends CI_Controller{
 			
 			$data['err_companyid']="There is no companies, please Add a company first";
 		}
+
+		//Active_State
+		$active_state = $this->input->post('active');
+		$active_state = $active_state === 'on';
 		
-		
+
 		if($this->form_validation->run())     
         {  
 
@@ -72,6 +82,7 @@ class Employee extends CI_Controller{
 							'mobile' => $this->input->post('mobile'),
 							'Nationality' => $this->input->post('Nationality'),
 							'position' => $this->input->post('position'),
+							'status' => $active_state
 						);
 						
 						$employee_id = $this->Employee_model->add_employee($params);
@@ -125,10 +136,14 @@ class Employee extends CI_Controller{
             
             if ($this->form_validation->run())     
             {   
-		        $comapnyid=$this->input->post('companyid');
-				$filess = $this->db->get_where('company', array('Name' =>$comapnyid))->row_array();
+                $comapnyid=$this->input->post('companyid');
+                $filess = $this->db->get_where('company', array('Name' =>$comapnyid))->row_array();
 
-				if (!empty($filess)) { 			
+                //Active_State
+                $active_state = $this->input->post('active');
+                $active_state = $active_state === 'on';
+
+                if (!empty($filess)) { 			
                     $params = array(
                         'Remarks' => $this->input->post('Remarks'),
                         'Ctype' => $this->input->post('Ctype'),
@@ -138,6 +153,7 @@ class Employee extends CI_Controller{
                         'mobile' => $this->input->post('mobile'),
                         'Nationality' => $this->input->post('Nationality'),
                         'position' => $this->input->post('position'),
+                        'status' => $active_state
                     );
 
                     $this->Employee_model->update_employee($employee_id,$params); 
