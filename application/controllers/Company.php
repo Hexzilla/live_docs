@@ -83,7 +83,7 @@ class Company extends CI_Controller{
      */
     function index()
     {
-        $params['limit'] = RECORDS_PER_PAGE; 
+        /*$params['limit'] = RECORDS_PER_PAGE; 
         $params['offset'] = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
         
         $config = $this->config->item('pagination');
@@ -91,16 +91,16 @@ class Company extends CI_Controller{
         $config['total_rows'] = $this->Company_model->get_all_company_count();
         $this->pagination->initialize($config);
 
-        $data['company'] = $this->Company_model->get_all_company();
+        $data['company'] = $this->Company_model->get_all_company();*/
 		
-/* 	echo"<pre>";
-		print_r($data['company']);
-		exit(); */
-		
-		         
         $data['_view'] = 'company/index';
         $this->load->view('layouts/main',$data);
     }
+
+	function get_all_company() {
+		$company = $this->Company_model->get_all_company();
+		echo json_encode($company);
+	}
 
     /*
      * Adding a new company
@@ -131,6 +131,10 @@ class Company extends CI_Controller{
 		if ((empty($Customer_id))&&($_POST)){
 			$data['err_customer_id']="There is no customers defined, please add customer first";
 		}
+
+		//Active_State
+		$active_state = $this->input->post('active');
+		$active_state = $active_state === 'on';
 		
 		//Has_main_company
 		$validated = 1;
@@ -152,6 +156,7 @@ class Company extends CI_Controller{
 				'CompReg' => $this->input->post('CompReg'),
 				'email' => $this->input->post('email'),
 				'main_company_id' => $main_company_id,
+				'status' => $active_state
 			);
 			
 			$company_id = $this->Company_model->add_company($params);
@@ -237,6 +242,10 @@ class Company extends CI_Controller{
 			$this->form_validation->set_rules('CompType','CompType','required');
 			//$this->form_validation->set_rules('Customer_id[]','Customer Id','required');
 
+			//Active_State
+			$active_state = $this->input->post('active');
+			$active_state = $active_state === 'on';
+
 			//Has_main_company
 			$validated = 1;
 			$has_company = $this->input->post('has_company');
@@ -262,6 +271,7 @@ class Company extends CI_Controller{
 					'CompReg' => $this->input->post('CompReg'),
 					'email' => $this->input->post('email'),
 					'main_company_id' => $main_company_id,
+					'status' => $active_state
 				);
 				$this->Company_model->update_company($companyid, $params);  
 

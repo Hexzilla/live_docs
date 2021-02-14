@@ -99,7 +99,7 @@ class Company_model extends CI_Model
         }
         //return $this->db->get('company')->result_array();
 	  
-        $this->db->select('company.companyid,company.Name,company.companyNo ,company.CompType,company.CompReg,company.email,company.Managerid,comptypes.name as CTypeName');
+        $this->db->select('company.companyid,company.status,company.Name,company.companyNo ,company.CompType,company.CompReg,company.email,company.Managerid,comptypes.name as CTypeName');
 		
         $this->db->from('company');
   

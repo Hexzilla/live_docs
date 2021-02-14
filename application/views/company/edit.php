@@ -25,7 +25,7 @@
 						<label for="Name" class="control-label"><span class="text-danger">*</span>الاسم</label>
 						<div class="form-group">
 							<input type="text" name="Name" value="<?php echo ($this->input->post('Name') ? $this->input->post('Name') : $company['Name']); ?>" class="form-control" id="Name" />
-							<span id="name-text-danger" class="text-danger"><?php echo form_error('Name');?></span>
+							<span id="name-text-danger" class="text-danger"><?php echo form_error('Name'); ?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -45,7 +45,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">				
+				<div class="row">
 					<!--PARTNER_COMPANY BEGIN-->
 					<div class="col-md-6">
 						<div class="form-check">
@@ -67,7 +67,7 @@
 							<span class="text-danger"><?php echo $err_partner_company_id; ?></span>
 						</div>
 					</div>
-					<!--PARTNER_COMPANY END-->	
+					<!--PARTNER_COMPANY END-->
 					<!--HAS_MAIN_COMPANY BEGIN-->
 					<div class="col-md-6">
 						<?php
@@ -80,7 +80,7 @@
 							<input type="checkbox" class="form-check-input" id="has_company" name="has_company" <?php echo ($comp_checked_state); ?> />
 							<label for="has_company" class="control-label" style="margin-right:8px;">Has a compnay</label>
 						</div>
-						<div id="div_has_main_compnay" class="form-group <?php echo $comp_disabled; ?>">
+						<div id="div_has_main_company" class="form-group <?php echo $comp_disabled; ?>">
 							<input type="text" name="main_company_name" value="<?php echo $main_company_name; ?>" class="form-control" id="main_company_name" autocomplete="off">
 							<input type="hidden" name="main_company_id" value="<?php echo $main_company_id; ?>" class="form-control" id="main_company_id">
 							<div id="suggesstion-company"></div>
@@ -128,14 +128,14 @@
 						<label for="companyNo" class="control-label">رقم المنشأة</label>
 						<div class="form-group">
 							<input type="text" name="companyNo" value="<?php echo ($this->input->post('companyNo') ? $this->input->post('companyNo') : $company['companyNo']); ?>" class="form-control" id="companyNo" />
-							<span class="text-danger"><?php echo form_error('companyNo');?></span>
+							<span class="text-danger"><?php echo form_error('companyNo'); ?></span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="CompReg" class="control-label">رقم التسجيل</label>
 						<div class="form-group">
 							<input type="text" name="CompReg" value="<?php echo ($this->input->post('CompReg') ? $this->input->post('CompReg') : $company['CompReg']); ?>" class="form-control" id="CompReg" />
-							<span class="text-danger"><?php echo form_error('CompReg');?></span>
+							<span class="text-danger"><?php echo form_error('CompReg'); ?></span>
 						</div>
 					</div>
 				</div>
@@ -152,6 +152,18 @@
 						<div class="form-group">
 							<input type="text" name="Remarks" value="<?php echo ($this->input->post('Remarks') ? $this->input->post('Remarks') : $company['Remarks']); ?>" class="form-control" id="Remarks" />
 							<span class="text-danger"><?php echo form_error('Remarks'); ?></span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<?php
+							$active_state = ($company['status'] == 1 || $this->input->post('active') === 'on');
+							$active_state = $active_state == 1 ? "checked" : "";
+						?>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="active" name="active" <?php echo ($active_state); ?> />
+							<label for="active" class="control-label" style="margin-right:8px;">Active</label>
 						</div>
 					</div>
 				</div>
@@ -176,9 +188,8 @@
 	function selectPartner(val) {
 		var res = val.split(",")
 		var parterId = "#" + "company_partner_" + res[0];
-		if ($(parterId).length == 0)
-		{
-			$("#partner_list").append('<div class="my_delete_my" id="company_partner_'+res[0]+'"><input class="rolesHidden" type="hidden" name="partner_id[]" value="'+res[0]+'"><span class="class_lists">'+res[1]+'</span><label data-id="'+res[0]+'" class="ic_delete_partners"><i class="fa fa-trash" aria-hidden="true"></i></label></div>');
+		if ($(parterId).length == 0) {
+			$("#partner_list").append('<div class="my_delete_my" id="company_partner_' + res[0] + '"><input class="rolesHidden" type="hidden" name="partner_id[]" value="' + res[0] + '"><span class="class_lists">' + res[1] + '</span><label data-id="' + res[0] + '" class="ic_delete_partners"><i class="fa fa-trash" aria-hidden="true"></i></label></div>');
 		}
 		$("#partner_company_name").val('');
 		$("#suggesstion_partner").hide();

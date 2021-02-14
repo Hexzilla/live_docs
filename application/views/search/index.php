@@ -24,7 +24,7 @@
         <div class="col-md-12">
 
           <div class="navbar_form">
-            <form class="navbar-form" action="<?php echo base_url(); ?>search" method="post" role="search">
+            <form id="search-form" class="navbar-form" action="<?php echo base_url(); ?>search" method="post" role="search">
               <div class="input-group add-on">
                 <input class="form-control" placeholder="ادخل النص" value="<?php echo $this->input->post('search'); ?>" name="search" id="srch-term" type="text">
                 <div class="input-group-btn">
@@ -134,8 +134,11 @@
                             <?php echo sprintf($format, $c['companyNo']) ?>
                             <?php echo sprintf($format, $c['CompReg']) ?>
                             <?php
-                              $company_no = implode('<br>', str_split($c['companyNo'], 12));
-                              $company_name = implode('<br>', str_split($c['Name'], 12));
+                              $string = $c['companyNo'];
+                              $company_no = implode('<br>', preg_split('~\X{12}\K~u', $string));
+
+                              $string = $c['Name'];
+                              $company_name = implode('<br>', preg_split('~\X{12}\K~u', $string));
                             ?>
                             <td><a data-toggle="modal" data-listing="<table class='table-responsive'><tr><th>Company ID</th><th>Name</th><th>Company Type</th><th>Customer</th><th>Company No</th><th>Registeration</th></tr><tr><td><?php echo $c['companyid']; ?></td><td><?php echo $company_name; ?></td><td><?php echo $c['CTypeName']; ?></td><td><?php echo $c['customer']; ?></td><td><?php echo $company_no; ?></td><td><?php echo $c['CompReg']; ?></td></tr>  </table>" data-target="#exampleModal" class="Show_details">view</a></td>
 
@@ -198,7 +201,7 @@
             <div class="card">
               <div class="card-header" role="tab" id="headingThree1">
                 <h5 class="mb-0">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree1" aria-expanded="false" aria-controls="collapseThree">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree1" aria-expanded="false" aria-controls="collapseThree1">
                     مستند
                   </a>
                   <span style="float:right">found <label>(<?php echo count(@$documents); ?>)</label></span>
@@ -239,15 +242,14 @@
                             <?php echo sprintf($format, $d['expiredate']) ?>
                             <?php echo sprintf($format, $d['warndays']) ?>
                             <?php
-                              $company_name = implode('<br>', str_split($d['compname'], 12));
+                              //$company_name = implode('<br>', str_split($d['compname'], 12));
+                              $string = $d['compname'];
+                              $company_name = implode('<br>', preg_split('~\X{12}\K~u', $string));
                             ?>
                             <td><a data-toggle="modal" data-listing="<table><tr><th>#</th><th>Comapny Name</th><th>Document Type</th><th>Category</th><th>Document No</th><th>Issue Date</th><th>Expire Date</th><th>Warndays</th></tr> <tr><td><?php echo $d['docid']; ?></td><td><?php echo $company_name; ?></td><td><?php echo $d['docname']; ?></td><td><?php echo $d['category']; ?></td><td><?php echo $d['docno']; ?></td><td><?php echo $d['issuedate']; ?></td><td><?php echo $d['expiredate']; ?></td><td><?php echo $d['warndays']; ?></td></tr></table>" data-target="#exampleModal" class="Show_details">view</a></td>
+                          </tr>
+                      <?php } } ?>
                     </table>
-
-                    </tr>
-                <?php }
-                      } ?>
-                </table>
                   </div>
                 </div>
               </div>
@@ -259,3 +261,29 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#search-form").submit(function(event) {
+    sessionStorage.clear()
+  });
+
+  $(".collapsed").each(function() {
+    var elementId = $(this).attr('aria-controls');
+    if (sessionStorage.getItem('search_collapsed_' + elementId) == '1') {
+      $("#" + elementId).attr('class', 'collapse in')
+      $(this).attr('aria-expanded', 'true')
+    }
+    else {
+      $("#" + elementId).attr('class', 'collapse')
+      $(this).attr('aria-expanded', 'false')
+    }
+  })
+
+  $(".collapsed").click(function() {
+    var state = $(this).attr('aria-expanded')
+    var elementId = $(this).attr('aria-controls');
+    sessionStorage.setItem('search_collapsed_' + elementId, state == 'true' ? '0' : '1');    
+  })
+})
+</script> -->
